@@ -10,28 +10,202 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String   @db.VarChar(255)
-  content   String?
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-}
+// model Post {
+//   id        Int      @id @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   title     String   @db.VarChar(255)
+//   content   String?
+//   published Boolean  @default(false)
+//   author    User     @relation(fields: [authorId], references: [id])
+//   authorId  Int
+// }
 
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
-}
+// model Profile {
+//   id     Int     @id @default(autoincrement())
+//   bio    String?
+//   user   User    @relation(fields: [userId], references: [id])
+//   userId Int     @unique
+// }
+
+// model User {
+//   id      Int      @id @default(autoincrement())
+//   email   String   @unique
+//   name    String?
+//   posts   Post[]
+//   profile Profile?
+// }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(30)
+  surname       String          @db.VarChar(30)
+  mail          String          @unique @db.VarChar(50)
+  phone         String          @db.VarChar(20)
+  address       Address         @relation(fields: [addressId], references: [id])
+  password      String          @db.VarChar(20)
+  addressId     Int
+  //photo:nanikore
+  Rating        Rating[]
+  Advertisement Advertisement[]
+  Post          Post[]
+  ChatMessage   ChatMessage[]
+}
+
+model Address {
+  id         Int          @id @default(autoincrement())
+  street     String       @db.VarChar(50)
+  flat       String       @db.VarChar(10)
+  city       String       @db.VarChar(50)
+  state      String       @db.VarChar(50)
+  postalCode String       @db.VarChar(10)
+  latitude   Float        @db.Float
+  longitude  Float        @db.Float
+  User       User[]
+  GreenPoint GreenPoint[]
+}
+
+model UserStore {
+  id          Int       @id @default(autoincrement())
+  displayName String    @unique
+  // storeKey    String
+  Benefit     Benefit[]
+}
+
+model UserCustomer {
+  id             Int       @id @default(autoincrement())
+  pointsCurrent  Int       @db.Int
+  pointsTotal    Int       @db.Int // las DB no almacenan cálculos
+  benefitsActive Benefit[]
+  // benefitsHistory Benefit[]
+}
+
+model Rating {
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  text   String @db.VarChar(255)
+  value  Int    @db.Int
+  userId Int
+}
+
+model Advertisement {
+  id             Int          @id @default(autoincrement())
+  user           User         @relation(fields: [userId], references: [id])
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  durationStart  DateTime     @db.DateTime
+  durationEnd    DateTime     @db.DateTime
+  displayName    String       @db.VarChar(20)
+  text           String       @db.VarChar(255)
+  // photo           String
+  userId         Int
+  subscriptionId Int
+}
+
+model Subscription {
+  id             Int             @id @default(autoincrement())
+  name           String          @db.VarChar(10)
+  amount         Float           @db.Float
+  duration       Int             @db.Int
+  advertisements Advertisement[]
+}
+
+model Benefit {
+  id             Int          @id @default(autoincrement())
+  name           String       @db.VarChar(20)
+  type           String       @db.VarChar(10)
+  endDate        DateTime     @db.DateTime
+  quantity       Int          @db.Int
+  pointsCost     Int          @db.Int
+  isActive       Boolean      @db.TinyInt
+  userStore      UserStore    @relation(fields: [userStoreId], references: [id])
+  userCustomer   UserCustomer @relation(fields: [userCustomerId], references: [id])
+  userStoreId    Int
+  userCustomerId Int
+}
+
+model GreenPoint {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(50)
+  availability Json           @db.Json
+  type         String         @db.VarChar(15)
+  address      Address        @relation(fields: [addressId], references: [id])
+  materialType MaterialType[]
+  organic      Organic[]
+  addressId    Int
+}
+
+model Organic {
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(50)
+  // photo           String
+  isCompostable Boolean     @db.TinyInt
+  GreenPoint    GreenPoint? @relation(fields: [greenPointId], references: [id])
+  greenPointId  Int?
+}
+
+model Material {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(10)
+  // photo           String
+  description  String         @db.VarChar(255)
+  materialType MaterialType[]
+  Post         Post[]
+}
+
+model MaterialType {
+  id           Int         @id @default(autoincrement())
+  name         String      @db.VarChar(15)
+  // photo           String
+  type         String      @db.VarChar(15)
+  GreenPoint   GreenPoint? @relation(fields: [greenPointId], references: [id])
+  greenPointId Int?
+  Material     Material?   @relation(fields: [materialId], references: [id])
+  materialId   Int?
+}
+
+model Post {
+  id             Int              @id @default(autoincrement())
+  userPost       User             @relation(fields: [userId], references: [id])
+  material       Material         @relation(fields: [materialId], references: [id])
+  quantity       Int              @db.Int
+  description    String           @db.VarChar(255)
+  purpouse       String           @db.VarChar(10)
+  // photo       String
+  pointsAwared   Int              @db.Int
+  isActive       Boolean          @db.TinyInt
+  isReserved     Boolean          @db.TinyInt
+  userId         Int
+  materialId     Int
+  PostCommitment PostCommitment[]
+  Chat           Chat[]
+}
+
+model PostCommitment {
+  id        Int     @id @default(autoincrement())
+  tokenCode String  @db.VarChar(25)
+  isActive  Boolean @db.TinyInt
+  post      Post    @relation(fields: [postId], references: [id])
+  postId    Int
+}
+
+model Chat {
+  id          Int           @id @default(autoincrement())
+  post        Post          @relation(fields: [postId], references: [id])
+  startDate   DateTime      @db.DateTime
+  endDate     DateTime      @db.DateTime
+  isActive    Boolean       @db.TinyInt
+  postId      Int
+  ChatMessage ChatMessage[]
+}
+
+model ChatMessage {
+  id         Int      @id @default(autoincrement())
+  sender     User     @relation(fields: [senderId], references: [id])
+  // receiver   User     @relation(fields: [receiverId], references: [id])
+  timestamp  DateTime
+  message    String
+  chat       Chat     @relation(fields: [chatId], references: [id])
+  senderId   Int
+  receiverId Int
+  chatId     Int
 }
