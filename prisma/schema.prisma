@@ -88,7 +88,7 @@ model Benefit {
   id                    Int          @id @default(autoincrement())
   name                  String       @db.VarChar(20)
   type                  String       @db.VarChar(10)
-  endDate               DateTime     @db.Date
+  endDate               DateTime     
   quantity              Int          @db.Integer
   pointsCost            Int          @db.Integer
   isActive              Boolean      @db.Boolean
