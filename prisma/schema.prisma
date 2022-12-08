@@ -16,9 +16,9 @@ model User {
   surname             String          @db.VarChar(30)
   mail                String          @unique @db.VarChar(50)
   phone               String          @db.VarChar(20)
-  address             Address         @relation(fields: [addressId], references: [id])
+  address             Address[]
   password            String          @db.VarChar(20)
-  addressId           Int
+  username            String          @unique @db.VarChar(25)
   //photo:nanikore
   Rating              Rating[]
   Advertisement       Advertisement[]
@@ -28,16 +28,18 @@ model User {
 }
 
 model Address {
-  id         Int          @id @default(autoincrement())
-  street     String       @db.VarChar(50)
-  flat       String       @db.VarChar(10)
-  city       String       @db.VarChar(50)
-  state      String       @db.VarChar(50)
-  postalCode String       @db.VarChar(10)
-  latitude   Float        @db.DoublePrecision
-  longitude  Float        @db.DoublePrecision
-  User       User[]
-  GreenPoint GreenPoint[]
+  id           Int         @id @default(autoincrement())
+  street       String      @db.VarChar(50)
+  flat         String      @db.VarChar(10)
+  city         String      @db.VarChar(50)
+  state        String      @db.VarChar(50)
+  postalCode   String      @db.VarChar(10)
+  latitude     Float       @db.DoublePrecision
+  longitude    Float       @db.DoublePrecision
+  GreenPoint   GreenPoint? @relation(fields: [greenPointId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  greenPointId Int?        @unique
+  User         User?       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId       Int?
 }
 
 model UserStore {
@@ -49,8 +51,8 @@ model UserStore {
 
 model UserCustomer {
   id              Int       @id @default(autoincrement())
-  pointsCurrent   Int       @db.Integer
-  pointsTotal     Int       @db.Integer // las DB no almacenan cálculos
+  pointsCurrent   Int       @default(0) @db.Integer
+  pointsTotal     Int       @default(0) @db.Integer
   benefitsActive  Benefit[] @relation("benefitsActive")
   benefitsHistory Benefit[] @relation("benefitsHistory")
 }
@@ -85,16 +87,16 @@ model Subscription {
 }
 
 model Benefit {
-  id                    Int          @id @default(autoincrement())
-  name                  String       @db.VarChar(20)
-  type                  String       @db.VarChar(10)
-  endDate               DateTime     @db.Timestamp
-  quantity              Int          @db.Integer
-  pointsCost            Int          @db.Integer
-  isActive              Boolean      @db.Boolean
-  userStore             UserStore    @relation(fields: [userStoreId], references: [id])
-  userCustomerActive    UserCustomer @relation(name: "benefitsActive", fields: [userCustomerActiveId], references: [id])
-  userCustomerHistory   UserCustomer @relation(name: "benefitsHistory", fields: [userCustomerHistoryId], references: [id])
+  id                    Int            @id @default(autoincrement())
+  name                  String         @db.VarChar(20)
+  type                  String         @db.VarChar(10)
+  endDate               DateTime       @db.Timestamp
+  quantity              Int            @db.Integer
+  pointsCost            Int            @db.Integer
+  isActive              Boolean        @db.Boolean
+  userStore             UserStore      @relation(fields: [userStoreId], references: [id])
+  userCustomerActive    UserCustomer[] @relation("benefitsActive")
+  userCustomerHistory   UserCustomer[] @relation("benefitsHistory")
   userStoreId           Int
   userCustomerActiveId  Int
   userCustomerHistoryId Int
@@ -105,19 +107,17 @@ model GreenPoint {
   name         String         @db.VarChar(50)
   availability Json           @db.Json
   type         String         @db.VarChar(15)
-  address      Address        @relation(fields: [addressId], references: [id])
   materialType MaterialType[]
   organic      Organic[]
-  addressId    Int
+  Address      Address?
 }
 
 model Organic {
-  id            Int         @id @default(autoincrement())
-  name          String      @db.VarChar(50)
+  id            Int          @id @default(autoincrement())
+  name          String       @db.VarChar(50)
   // photo           String
-  isCompostable Boolean     @db.Boolean
-  GreenPoint    GreenPoint? @relation(fields: [greenPointId], references: [id])
-  greenPointId  Int?
+  isCompostable Boolean      @db.Boolean
+  GreenPoint    GreenPoint[]
 }
 
 model Material {
@@ -134,7 +134,7 @@ model MaterialType {
   name         String      @db.VarChar(15)
   // photo           String
   type         String      @db.VarChar(15)
-  GreenPoint   GreenPoint? @relation(fields: [greenPointId], references: [id])
+  GreenPoint   GreenPoint? @relation(fields: [greenPointId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   greenPointId Int?
   Material     Material?   @relation(fields: [materialId], references: [id])
   materialId   Int?
@@ -169,7 +169,7 @@ model Chat {
   id          Int           @id @default(autoincrement())
   post        Post          @relation(fields: [postId], references: [id])
   startDate   DateTime      @db.Timestamp
-  endDate     DateTime      @db.Timestamp
+  endDate     DateTime?     @db.Timestamp
   isActive    Boolean       @db.Boolean
   postId      Int
   ChatMessage ChatMessage[]

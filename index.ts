@@ -1,80 +1,100 @@
-import { PrismaClient } from '@prisma/client';
-import express from 'express';
+import express from "express";
+// import swaggerUi from "swagger-ui-express";
+// import OpenApiValidator from "express-openapi-validator";
+import cors from "cors";
+import userRouter from "./routes/user.routes";
+
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const app = express();
 
 app.use(express.json());
+app.use("/users", userRouter);
+// app.use('/swagger', swaggerUi.serve, swaggerUi.setup(null, { swaggerOptions: { url: '/swagger.json' } }));
+
+// app.use(OpenApiValidator.middleware({
+//   apiSpec,
+//   validateRequests: true,
+//   validateResponses: true
+// }));
 
 async function main() {
-  // await prisma.user.create({
-  //   data: {
-  //     name: 'Alice',
-  //     email: 'alice@prisma.io',
-  //     posts: {
-  //       create: { title: 'Hello World' },
-  //     },
-  //     profile: {
-  //       create: { bio: 'I like turtles' },
-  //     },
+  await prisma.user.deleteMany();
+  await prisma.address.deleteMany();
+  // await prisma.address.delete({
+  //   where: {
+  //     id: 14,
   //   },
   // });
+  // await prisma.user.delete({
+  //   where: {
+  //     id: 22,
+  //   },
+  // });
+  // const users = await prisma.user.findMany({
+  //   include: {
+  //     address: true,
+  //   },
+  // });
+  // console.log("users", JSON.stringify(users, null, 2));
+  // await prisma.user.findUnique({
+  //   where: {
+  //     id: 22,
+  //   },
+  // })
+  // const address = await prisma.address.create({
+  //   data: {
+  //     city: "Istanbul",
+  //     flat: "1",
+  //     street: "Istiklal",
+  //     latitude: 41.01384,
+  //     longitude: 28.94966,
+  //     postalCode: "34433",
+  //     state: "Istanbul",
+  //   },
+  // });
+  await prisma.user.create({
+    data: {
+      name: "Elsa",
+      surname: "Prisma",
+      mail: "elsa@prisma.io",
+      phone: "01144446666",
+      password: "password",
+      username: "elsaprisma",
+      address: {
+        create: {
+          city: "Istanbul",
+          flat: "1",
+          street: "Istiklal",
+          latitude: 41.01384,
+          longitude: 28.94966,
+          postalCode: "34433",
+          state: "Istanbul",
+        },
+      },
+    },
+    include: {
+      address: true,
+    },
+  });
+  await prisma.user.create({
+    data: {
+      name: "Sarah",
+      surname: "Prisma",
+      mail: "sarah@prisma.io",
+      phone: "01144446666",
+      password: "password",
+      username: "sarahprisma",
+      address: {},
+    },
+  });
 }
 
-// main();
+main();
 
-app.get('/', async (req, res) => {
-  return res.json({ message: 'Hello World' });
+app.get("/", async (req: express.Request, res: express.Response) => {
+  return res.json({ message: "Hello World" });
 });
 
-app.get('/users', async (req, res) => {
-  const users = await prisma.user.findMany({
-    include: {
-      posts: true,
-      profile: true,
-    },
-  });
-  return res.json(users);
-});
-
-app.get('/user/:id', async (req, res) => {
-  const { id } = req.params;
-  const user = await prisma.user.findUnique({
-    where: {
-      id: Number(id),
-    },
-    include: {
-      posts: true,
-      profile: true,
-    },
-  });
-  return res.json(user);
-});
-
-app.post('/users', async (req, res) => {
-  const { name, email } = req.body;
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-    },
-  });
-  return res.json(user);
-});
-
-app.put('/users/:id', async (req, res) => {
-  const { id } = req.params;
-  const { name, email } = req.body;
-  const user = await prisma.user.update({
-    where: {
-      id: Number(id),
-    },
-    data: {
-      name,
-      email,
-    },
-  });
-  return res.json(user);
-});
-
-const server = app.listen(5000, () => console.log('server ready'));
+const server = app.listen(5000, () => console.log("server ready at 5000"));
