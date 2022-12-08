@@ -67,8 +67,8 @@ model Advertisement {
   id             Int          @id @default(autoincrement())
   user           User         @relation(fields: [userId], references: [id])
   subscription   Subscription @relation(fields: [subscriptionId], references: [id])
-  durationStart  DateTime
-  durationEnd    DateTime
+  durationStart  DateTime     @db.Timestamp
+  durationEnd    DateTime     @db.Timestamp
   displayName    String       @db.VarChar(30)
   text           String       @db.VarChar(255)
   // photo           String
@@ -88,7 +88,7 @@ model Benefit {
   id                    Int          @id @default(autoincrement())
   name                  String       @db.VarChar(20)
   type                  String       @db.VarChar(10)
-  endDate               DateTime     
+  endDate               DateTime     @db.Timestamp
   quantity              Int          @db.Integer
   pointsCost            Int          @db.Integer
   isActive              Boolean      @db.Boolean
@@ -168,8 +168,8 @@ model PostCommitment {
 model Chat {
   id          Int           @id @default(autoincrement())
   post        Post          @relation(fields: [postId], references: [id])
-  startDate   DateTime
-  endDate     DateTime
+  startDate   DateTime      @db.Timestamp
+  endDate     DateTime      @db.Timestamp
   isActive    Boolean       @db.Boolean
   postId      Int
   ChatMessage ChatMessage[]
@@ -180,7 +180,7 @@ model ChatMessage {
   sender     User     @relation(name: "chatSender", fields: [senderId], references: [id])
   receiver   User     @relation(name: "chatReceiver", fields: [receiverId], references: [id])
   timestamp  DateTime @default(now())
-  message    String
+  message    String   @db.VarChar(255)
   chat       Chat     @relation(fields: [chatId], references: [id])
   senderId   Int
   receiverId Int

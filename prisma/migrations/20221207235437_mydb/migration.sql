@@ -55,8 +55,8 @@ CREATE TABLE "Rating" (
 -- CreateTable
 CREATE TABLE "Advertisement" (
     "id" SERIAL NOT NULL,
-    "durationStart" TIMESTAMP(3) NOT NULL,
-    "durationEnd" TIMESTAMP(3) NOT NULL,
+    "durationStart" TIMESTAMP NOT NULL,
+    "durationEnd" TIMESTAMP NOT NULL,
     "displayName" VARCHAR(30) NOT NULL,
     "text" VARCHAR(255) NOT NULL,
     "userId" INTEGER NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE "Benefit" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(20) NOT NULL,
     "type" VARCHAR(10) NOT NULL,
-    "endDate" DATE NOT NULL,
+    "endDate" TIMESTAMP NOT NULL,
     "quantity" INTEGER NOT NULL,
     "pointsCost" INTEGER NOT NULL,
     "isActive" BOOLEAN NOT NULL,
@@ -160,8 +160,8 @@ CREATE TABLE "PostCommitment" (
 -- CreateTable
 CREATE TABLE "Chat" (
     "id" SERIAL NOT NULL,
-    "startDate" TIMESTAMP(3) NOT NULL,
-    "endDate" TIMESTAMP(3) NOT NULL,
+    "startDate" TIMESTAMP NOT NULL,
+    "endDate" TIMESTAMP NOT NULL,
     "isActive" BOOLEAN NOT NULL,
     "postId" INTEGER NOT NULL,
 
@@ -172,7 +172,7 @@ CREATE TABLE "Chat" (
 CREATE TABLE "ChatMessage" (
     "id" SERIAL NOT NULL,
     "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "message" TEXT NOT NULL,
+    "message" VARCHAR(255) NOT NULL,
     "senderId" INTEGER NOT NULL,
     "receiverId" INTEGER NOT NULL,
     "chatId" INTEGER NOT NULL,
