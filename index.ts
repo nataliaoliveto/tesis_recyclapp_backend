@@ -1,27 +1,18 @@
-import express from "express";
-// import swaggerUi from "swagger-ui-express";
-// import OpenApiValidator from "express-openapi-validator";
-import cors from "cors";
-import userRouter from "./routes/user.routes";
+const express = require("express");
+const cors = require("cors");
+const userRouter = require("./routes/user.routes");
 
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const app = express();
 
+app.use(cors());
 app.use(express.json());
-app.use("/users", userRouter);
-// app.use('/swagger', swaggerUi.serve, swaggerUi.setup(null, { swaggerOptions: { url: '/swagger.json' } }));
-
-// app.use(OpenApiValidator.middleware({
-//   apiSpec,
-//   validateRequests: true,
-//   validateResponses: true
-// }));
+app.use("/api", userRouter);
 
 async function main() {
   await prisma.user.deleteMany();
-  await prisma.address.deleteMany();
   // await prisma.address.delete({
   //   where: {
   //     id: 14,
@@ -93,7 +84,7 @@ async function main() {
 
 main();
 
-app.get("/", async (req: express.Request, res: express.Response) => {
+app.get("/", async (req: any, res: any) => {
   return res.json({ message: "Hello World" });
 });
 
