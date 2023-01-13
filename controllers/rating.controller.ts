@@ -3,46 +3,46 @@ import type { Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
-const addressController = {
-  async getAddresses(req: Request, res: Response) {
+const ratingController = {
+  async getRatings(req: Request, res: Response) {
     try {
-      const addresses = await prisma.address.findMany();
-      res.status(200).json(addresses);
+      const ratings = await prisma.rating.findMany();
+      res.status(200).json(ratings);
     } catch (error) {
       res.status(500).json(error);
     }
   },
-  async getAddress(req: Request, res: Response) {
+  async getRating(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const address = await prisma.address.findUnique({
+      const rating = await prisma.rating.findUnique({
         where: {
           id: Number(id),
         },
       });
-      res.status(200).json(address);
+      res.status(200).json(rating);
     } catch (error) {
       res.status(500).json(error);
     }
   },
-  async createAddress(req: Request, res: Response) {
+  async createRating(req: Request, res: Response) {
     const { body } = req;
     try {
-      const address = await prisma.address.create({
+      const rating = await prisma.rating.create({
         data: {
           ...body,
         },
       });
-      res.status(200).json(address);
+      res.status(201).json(rating);
     } catch (error) {
       res.status(500).json(error);
     }
   },
-  async updateAddress(req: Request, res: Response) {
+  async updateRating(req: Request, res: Response) {
     const { id } = req.params;
     const { body } = req;
     try {
-      const address = await prisma.address.update({
+      const rating = await prisma.rating.update({
         where: {
           id: Number(id),
         },
@@ -50,24 +50,24 @@ const addressController = {
           ...body,
         },
       });
-      res.status(200).json(address);
+      res.status(200).json(rating);
     } catch (error) {
       res.status(500).json(error);
     }
   },
-  async deleteAddress(req: Request, res: Response) {
+  async deleteRating(req: Request, res: Response) {
     const { id } = req.params;
     try {
-      const address = await prisma.address.delete({
+      const rating = await prisma.rating.delete({
         where: {
           id: Number(id),
         },
       });
-      res.status(200).json(address);
+      res.status(200).json(rating);
     } catch (error) {
       res.status(500).json(error);
     }
   },
 };
 
-export default addressController;
+export default ratingController;
