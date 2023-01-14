@@ -7,6 +7,7 @@ import {
   subscriptionRouter,
   advertisementRouter,
   organicRouter,
+  materialProductRouter,
 } from "./routes";
 
 import { PrismaClient, Prisma } from "@prisma/client";
@@ -22,6 +23,7 @@ app.use("/api", ratingRouter);
 app.use("/api", subscriptionRouter);
 app.use("/api", advertisementRouter);
 app.use("/api", organicRouter);
+app.use("/api", materialProductRouter);
 app.use("*", (req, res) => {
   res.status(404).json({
     message: "Not Found",
@@ -29,7 +31,7 @@ app.use("*", (req, res) => {
 });
 
 async function main() {
-  // ? +++++++++++++++ USER +++++++++++++++
+  // * +++++++++++++++ USER +++++++++++++++
   async function mainUser() {
     console.log("mainUser");
     // await prisma.user.deleteMany();
@@ -88,7 +90,7 @@ async function main() {
     // });
   }
 
-  // ? +++++++++++++++ ADDRESS +++++++++++++++
+  // * +++++++++++++++ ADDRESS +++++++++++++++
   async function mainAddress() {
     console.log("mainAddress");
 
@@ -110,7 +112,7 @@ async function main() {
     // });
   }
 
-  // ? +++++++++++++++ RATING +++++++++++++++
+  // * +++++++++++++++ RATING +++++++++++++++
   async function mainRating() {
     console.log("mainRating");
     // await prisma.rating.create({
@@ -139,7 +141,7 @@ async function main() {
     // });
   }
 
-  // ? +++++++++++++++ SUBSCRIPTION +++++++++++++++
+  // * +++++++++++++++ SUBSCRIPTION +++++++++++++++
   async function mainSubscription() {
     console.log("mainSubscription");
     // await prisma.subscription.createMany({
@@ -169,7 +171,7 @@ async function main() {
     // });
   }
 
-  // ? +++++++++++++++ ADVERTISEMENT +++++++++++++++
+  // * +++++++++++++++ ADVERTISEMENT +++++++++++++++
   async function mainAdvertisement() {
     console.log("mainAdvertisement");
     // await prisma.advertisement.create({
@@ -222,10 +224,22 @@ async function main() {
     // });
   }
 
-  // ? +++++++++++++++ ORGANICO +++++++++++++++
+  // * +++++++++++++++ ORGANICO +++++++++++++++
   async function mainOrganic() {
     console.log("mainOrganic");
-    // TODO: also check lower/upper
+
+    // await prisma.organic.upsert({
+    //   where: {
+    //     name: "Banana con dulce de leche".trim(),
+    //   },
+    //   update: {
+    //     name: "Manzana".trim(),
+    //   },
+    //   create: {
+    //     name: "Manzana".trim(),
+    //     isCompostable: true,
+    //   },
+    // });
 
     // await prisma.organic.create({
     //   data: {
@@ -233,53 +247,135 @@ async function main() {
     //     isCompostable: true,
     //   },
     // });
-    // await prisma.advertisement.createMany({
-    //   data: [
-    //     {
-    //       userId: 30,
-    //       subscriptionId: 2,
-    //       durationStart: new Date("2022-12-18"),
-    //       durationEnd: new Date("2022-12-25"),
-    //       displayName: "Ad Weekly",
-    //       text: "Advertisement Weekly Subscription Test",
-    //     },
-    //     {
-    //       userId: 30,
-    //       subscriptionId: 3,
-    //       durationStart: new Date("2022-12-19"),
-    //       durationEnd: new Date("2023-01-19"),
-    //       displayName: "Ad Monthly",
-    //       text: "Advertisement Monthly Subscription Test",
-    //     },
-    //   ],
-    //   skipDuplicates: true,
-    // });
-    // await prisma.advertisement.update({
+  }
+
+  // * +++++++++++++++ MATERIAL COMPONENT +++++++++++++++
+  async function mainMaterialComponent() {
+    console.log("mainMaterialComponent");
+
+    // await prisma.materialComponent.delete({
     //   where: {
-    //     id: 2,
+    //     id: 17,
     //   },
+    // });
+
+    // await prisma.materialComponent.upsert({
+    //   where: {
+    //     name: "Vidrio".trim(),
+    //   },
+    //   update: {
+    //     //   name: "Vidrio".trim(),
+    //     //   isRecyclable: true,
+    //   },
+    //   create: {
+    //     name: "Vidrio".trim(),
+    //     description:
+    //       "Limpiar y secar el vidrio de restos orgánicos. Según el producto de vidrio, puede contener una marca que indica su nivel de reutilización.",
+    //     recyclableType: "RECYCLABLE",
+    //   },
+    // });
+
+    // await prisma.materialComponent.upsert({
+    //   where: {
+    //     name: "Tetra-brick".trim(),
+    //   },
+    //   update: {
+    //     //   name: "Vidrio".trim(),
+    //     //   isRecyclable: true,
+    //   },
+    //   create: {
+    //     name: "Tetra-brick".trim(),
+    //     description:
+    //       "Limpiar y secar el tetra-brick de restos orgánicos. Compuesto en parte por cartón y en parte por aluminio. Tiene una complejidad diferente de reciclaje.",
+    //     recyclableType: "RECYCLABLE",
+    //   },
+    // });
+
+    // await prisma.materialComponent.upsert({
+    //   where: {
+    //     name: "Plástico".trim(),
+    //   },
+    //   update: {
+    //     //   name: "Vidrio".trim(),
+    //     //   isRecyclable: true,
+    //   },
+    //   create: {
+    //     name: "Plástico".trim(),
+    //     description: `Plásticos reciclables o reutilizables: \n
+    //     1 - PET (Tereftalato de Polietileno)
+    //     2 - HDPE (Polietileno de alta densidad)
+    //     3 - PVC (Polivinilo)
+    //     4 - LDPE (Polietileno de baja densidad)
+    //     5 - PP (Polipropileno)
+    //     6 - PS (Poliestireno)
+    //     Plástico no reciclable ni reutilizable:
+    //     7 - Otros plásticos y materiales compuestos.
+    //     Si contiene la sigla “PLA” son biodegradables y pueden ser compostados`,
+    //     recyclableType: "DEPENDS",
+    //   },
+    // });
+  }
+
+  // * +++++++++++++++ MATERIAL PRODUCT +++++++++++++++
+  async function mainMaterialProduct() {
+    console.log("mainMaterialProduct");
+
+    // await prisma.materialProduct.delete({
+    //   where: {
+    //     id: 4,
+    //   },
+    // });
+
+    // TODO: INSERT/UPDATE/DELETE record by ID where name = "";
+    // TODO: check if it is possible to DELETE previous relationship through update connections or separate queries
+    // await prisma.materialProduct.upsert({
+    //   where: {
+    //     name: "Cartón de vino".trim(),
+    //   },
+    //   update: {
+    //     materialComponent: {
+    //       connect: [
+    //         {
+    //           id: 16,
+    //         },
+    //         {
+    //           id: 18,
+    //         },
+    //       ],
+    //     },
+    //   },
+    //   create: {
+    //     name: "Cartón de vino".trim(),
+    //     materialComponent: {
+    //       connect: [
+    //         {
+    //           id: 16,
+    //         },
+    //         // {
+    //         //   id: 18,
+    //         // },
+    //       ],
+    //     },
+    //   },
+    // });
+
+    // await prisma.organic.create({
     //   data: {
-    //     subscription: {
-    //       connect: {
-    //         id: 3,
-    //       },
-    //     },
-    //   },
-    // });
-    // await prisma.advertisement.delete({
-    //   where: {
-    //     id: 5,
+    //     name: "mAnzana".toLowerCase(),
+    //     isCompostable: true,
     //   },
     // });
   }
 
   // ! +++++++++++++++ RUN +++++++++++++++
-  mainUser();
-  mainAddress();
-  mainRating();
-  mainSubscription();
-  mainAdvertisement();
-  mainOrganic();
+  await mainUser();
+  await mainAddress();
+  await mainRating();
+  await mainSubscription();
+  await mainAdvertisement();
+  await mainOrganic();
+  await mainMaterialComponent();
+  await mainMaterialProduct();
 
   // ? +++++++++++++++ DISPLAY +++++++++++++++
   async function mainDisplay() {
@@ -291,15 +387,25 @@ async function main() {
     // });
     // const ratings = await prisma.rating.findMany();
     //const subscriptions = await prisma.subscription.findMany();
-    const organics = await prisma.organic.findMany();
+    const materialProducts = await prisma.materialProduct.findMany();
+
+    // ({
+    //   where: {
+    //     name: {
+    //       endsWith: "BANANA".toLowerCase(),
+    //       mode: "insensitive", // Default value: default
+    //     },
+    //   },
+    // });
+
     // console.log("users", JSON.stringify(users, null, 2));
     // console.log("ratings", JSON.stringify(ratings, null, 2));
     //console.log("subscriptions", JSON.stringify(subscriptions, null, 2));
-    console.log("organics", JSON.stringify(organics, null, 2));
+    console.log("organics", JSON.stringify(materialProducts, null, 2));
   }
 
   // ! +++++++++++++++ RUN +++++++++++++++
-  mainDisplay();
+  await mainDisplay();
 }
 
 main();

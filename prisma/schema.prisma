@@ -1,36 +1,33 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [citext(map: "citext")]
 }
 
-// * +++++++++++++++ USER CRUD OK +++++++++++++++
+// * CRUD OK
 model User {
   id                  Int             @id @default(autoincrement())
   name                String          @db.VarChar(30)
   surname             String          @db.VarChar(30)
-  mail                String          @unique @db.VarChar(50)
+  mail                String          @unique @db.Citext
   phone               String          @db.VarChar(20)
-  address             Address[]
   password            String          @db.VarChar(20)
-  username            String          @unique @db.VarChar(25)
-  isArchived          Boolean         @default(false) @db.Boolean
-  // isKept isAble isUsable
-  //photo:nanikore
-  Rating              Rating[]
+  username            String          @unique @db.Citext
+  isArchived          Boolean         @default(false)
+  address             Address[]
   Advertisement       Advertisement[]
-  Post                Post[]
-  ChatMessageSent     ChatMessage[]   @relation("chatSender")
   ChatMessageReceived ChatMessage[]   @relation("chatReceiver")
+  ChatMessageSent     ChatMessage[]   @relation("chatSender")
+  Post                Post[]
+  Rating              Rating[]
 }
 
-// * +++++++++++++++ ADDRESS CRUD OK +++++++++++++++
+// * CRUD OK
 model Address {
   id           Int         @id @default(autoincrement())
   street       String      @db.VarChar(50)
@@ -38,184 +35,175 @@ model Address {
   city         String      @db.VarChar(50)
   state        String      @db.VarChar(50)
   postalCode   String      @db.VarChar(10)
-  latitude     Float       @db.DoublePrecision
-  longitude    Float       @db.DoublePrecision
-  isArchived   Boolean     @default(false) @db.Boolean
-  GreenPoint   GreenPoint? @relation(fields: [greenPointId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  latitude     Float
+  longitude    Float
   greenPointId Int?        @unique
-  User         User?       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId       Int?
+  isArchived   Boolean     @default(false)
+  GreenPoint   GreenPoint? @relation(fields: [greenPointId], references: [id])
+  User         User?       @relation(fields: [userId], references: [id])
 }
 
-// ? +++++++++++++++ USERSTORE CRUD PENDING +++++++++++++++
 model UserStore {
   id          Int       @id @default(autoincrement())
-  displayName String    @unique @db.VarChar(30)
-  isArchived  Boolean   @default(false) @db.Boolean
-  // storeKey    String
+  displayName String    @unique @db.Citext
+  isArchived  Boolean   @default(false)
   Benefit     Benefit[]
 }
 
-// ? +++++++++++++++ USERCUSTOMER CRUD PENDING +++++++++++++++
 model UserCustomer {
   id              Int       @id @default(autoincrement())
-  pointsCurrent   Int       @default(0) @db.Integer
-  pointsTotal     Int       @default(0) @db.Integer
-  isArchived      Boolean   @default(false) @db.Boolean
+  pointsCurrent   Int       @default(0)
+  pointsTotal     Int       @default(0)
+  isArchived      Boolean   @default(false)
   benefitsActive  Benefit[] @relation("benefitsActive")
   benefitsHistory Benefit[] @relation("benefitsHistory")
 }
 
-// * +++++++++++++++ RATING CRUD OK +++++++++++++++
+// * CRUD OK
 model Rating {
   id         Int     @id @default(autoincrement())
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   text       String  @db.VarChar(255)
-  value      Int     @db.Integer
+  value      Int
   userId     Int
-  isArchived Boolean @default(false) @db.Boolean
+  isArchived Boolean @default(false)
+  user       User    @relation(fields: [userId], references: [id])
 }
 
-// * +++++++++++++++ ADVERTISEMENT CRUD OK +++++++++++++++
+// * CRUD OK
 model Advertisement {
   id             Int          @id @default(autoincrement())
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   durationStart  DateTime     @db.Date
   durationEnd    DateTime     @db.Date
   displayName    String       @db.VarChar(30)
   text           String       @db.VarChar(255)
-  isArchived     Boolean      @default(false) @db.Boolean
-  // photo           String
   userId         Int
   subscriptionId Int
+  isArchived     Boolean      @default(false)
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
 }
 
-// * +++++++++++++++ SUBSCRIPTION CRUD OK +++++++++++++++
+// * CRUD OK
 model Subscription {
   id             Int             @id @default(autoincrement())
-  name           String          @unique @db.VarChar(10)
-  amount         Float           @db.DoublePrecision
-  duration       Int             @db.Integer
-  isArchived     Boolean         @default(false) @db.Boolean
+  name           String          @unique @db.Citext
+  amount         Float
+  duration       Int
+  isArchived     Boolean         @default(false)
   advertisements Advertisement[]
 }
 
-// ? +++++++++++++++ BENEFIT CRUD PENDING +++++++++++++++
 model Benefit {
   id                    Int            @id @default(autoincrement())
   name                  String         @db.VarChar(20)
   type                  String         @db.VarChar(10)
   endDate               DateTime       @db.Date
-  quantity              Int            @db.Integer
-  pointsCost            Int            @db.Integer
-  isActive              Boolean        @db.Boolean
-  isArchived            Boolean        @default(false) @db.Boolean
-  userStore             UserStore      @relation(fields: [userStoreId], references: [id])
-  userCustomerActive    UserCustomer[] @relation("benefitsActive")
-  userCustomerHistory   UserCustomer[] @relation("benefitsHistory")
+  quantity              Int
+  pointsCost            Int
+  isActive              Boolean
   userStoreId           Int
   userCustomerActiveId  Int
   userCustomerHistoryId Int
+  isArchived            Boolean        @default(false)
+  userStore             UserStore      @relation(fields: [userStoreId], references: [id])
+  userCustomerActive    UserCustomer[] @relation("benefitsActive")
+  userCustomerHistory   UserCustomer[] @relation("benefitsHistory")
 }
 
-// ? +++++++++++++++ GREENPOINT CRUD PENDING +++++++++++++++
 model GreenPoint {
-  id           Int            @id @default(autoincrement())
-  name         String         @db.VarChar(50)
-  availability Json           @db.Json
-  type         String         @db.VarChar(15)
-  isArchived   Boolean        @default(false) @db.Boolean
-  materialType MaterialType[]
-  organic      Organic[]
-  Address      Address?
+  id                Int                 @id @default(autoincrement())
+  name              String              @db.VarChar(50)
+  availability      Json                @db.Json
+  type              String              @db.VarChar(15)
+  isArchived        Boolean             @default(false)
+  Address           Address?
+  materialComponent MaterialComponent[] @relation("GreenPointToMaterialComponent")
+  organic           Organic[]           @relation("GreenPointToOrganic")
 }
 
-// ? +++++++++++++++ ORGANIC CRUD PENDING +++++++++++++++
+// TODO: CRUD IN PROGRESS - GREEN POINT PENDING
 model Organic {
   id            Int          @id @default(autoincrement())
-  name          String       @unique @db.VarChar(50)
-  isArchived    Boolean      @default(false) @db.Boolean
-  // photo           String
-  isCompostable Boolean      @db.Boolean
-  GreenPoint    GreenPoint[]
+  name          String       @unique @db.Citext
+  isCompostable Boolean
+  isArchived    Boolean      @default(false)
+  GreenPoint    GreenPoint[] @relation("GreenPointToOrganic")
 }
 
-// ? +++++++++++++++ MATERIAL CRUD PENDING +++++++++++++++
-model Material {
-  id           Int            @id @default(autoincrement())
-  name         String         @unique @db.VarChar(25)
-  // photo           String
-  description  String         @db.VarChar(255)
-  isArchived   Boolean        @default(false) @db.Boolean
-  materialType MaterialType[]
-  Post         Post[]
+// TODO: CRUD IN PROGRESS - POST PENDING
+model MaterialProduct {
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique @db.Citext
+  isArchived        Boolean             @default(false)
+  materialComponent MaterialComponent[] @relation("MaterialProductToMaterialComponent")
+  Post              Post[]
 }
 
-// ? +++++++++++++++ MATERIALTYPE CRUD PENDING +++++++++++++++
-model MaterialType {
-  id           Int         @id @default(autoincrement())
-  name         String      @unique @db.VarChar(25)
-  // photo           String
-  type         String      @db.VarChar(15)
-  isArchived   Boolean     @default(false) @db.Boolean
-  GreenPoint   GreenPoint? @relation(fields: [greenPointId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  greenPointId Int?
-  Material     Material?   @relation(fields: [materialId], references: [id])
-  materialId   Int?
+// TODO: CRUD IN PROGRESS - GREEN POINT PENDING
+model MaterialComponent {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique @db.Citext
+  recyclableType  RecyclableType
+  description     String            @db.VarChar(1024)
+  isArchived      Boolean           @default(false)
+  GreenPoint      GreenPoint[]      @relation("GreenPointToMaterialComponent")
+  MaterialProduct MaterialProduct[] @relation("MaterialProductToMaterialComponent")
 }
 
-// ? +++++++++++++++ POST CRUD PENDING +++++++++++++++
+enum RecyclableType {
+  RECYCLABLE
+  NO_RECYCLABLE
+  DEPENDS
+  ORGANIC
+}
+
 model Post {
-  id             Int              @id @default(autoincrement())
-  userPost       User             @relation(fields: [userId], references: [id])
-  material       Material         @relation(fields: [materialId], references: [id])
-  quantity       Int              @db.SmallInt
-  description    String           @db.VarChar(255)
-  purpouse       String           @db.VarChar(10)
-  // photo       String
-  pointsAwared   Int              @db.Integer
-  isActive       Boolean          @db.Boolean
-  isReserved     Boolean          @db.Boolean
-  isArchived     Boolean          @default(false) @db.Boolean
-  userId         Int
-  materialId     Int
-  PostCommitment PostCommitment[]
-  Chat           Chat[]
+  id                Int              @id @default(autoincrement())
+  quantity          Int              @db.SmallInt
+  description       String           @db.VarChar(255)
+  purpouse          String           @db.VarChar(10)
+  pointsAwared      Int
+  isActive          Boolean
+  isReserved        Boolean
+  userId            Int
+  materialProductId Int
+  isArchived        Boolean          @default(false)
+  Chat              Chat[]
+  materialProduct   MaterialProduct  @relation(fields: [materialProductId], references: [id])
+  userPost          User             @relation(fields: [userId], references: [id])
+  PostCommitment    PostCommitment[]
 }
 
-// ? +++++++++++++++ POSTCOMMITMENT CRUD PENDING +++++++++++++++
 model PostCommitment {
   id         Int     @id @default(autoincrement())
   tokenCode  String  @db.VarChar(25)
-  isActive   Boolean @db.Boolean
-  isArchived Boolean @default(false) @db.Boolean
-  post       Post    @relation(fields: [postId], references: [id])
+  isActive   Boolean
   postId     Int
+  isArchived Boolean @default(false)
+  post       Post    @relation(fields: [postId], references: [id])
 }
 
-// ? +++++++++++++++ CHAT CRUD PENDING +++++++++++++++
 model Chat {
   id          Int           @id @default(autoincrement())
-  post        Post          @relation(fields: [postId], references: [id])
   startDate   DateTime      @db.Date
   endDate     DateTime?     @db.Date
-  isActive    Boolean       @db.Boolean
-  isArchived  Boolean       @default(false) @db.Boolean
+  isActive    Boolean
   postId      Int
+  isArchived  Boolean       @default(false)
+  post        Post          @relation(fields: [postId], references: [id])
   ChatMessage ChatMessage[]
 }
 
-// ? +++++++++++++++ CHATMESSAGE CRUD PENDING +++++++++++++++
 model ChatMessage {
   id         Int      @id @default(autoincrement())
-  sender     User     @relation(name: "chatSender", fields: [senderId], references: [id])
-  receiver   User     @relation(name: "chatReceiver", fields: [receiverId], references: [id])
   timestamp  DateTime @default(now())
   message    String   @db.VarChar(255)
-  chat       Chat     @relation(fields: [chatId], references: [id])
-  isArchived Boolean  @default(false) @db.Boolean
   senderId   Int
   receiverId Int
   chatId     Int
+  isArchived Boolean  @default(false)
+  chat       Chat     @relation(fields: [chatId], references: [id])
+  receiver   User     @relation("chatReceiver", fields: [receiverId], references: [id])
+  sender     User     @relation("chatSender", fields: [senderId], references: [id])
 }

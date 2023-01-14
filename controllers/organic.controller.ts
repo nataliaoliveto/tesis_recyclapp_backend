@@ -53,6 +53,25 @@ const organicController = {
       res.status(500).json(error);
     }
   },
+  async createOrUpdateOrganic(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { body } = req;
+      const organic = await prisma.organic.upsert({
+        where: { name: body.name.trim() },
+        update: {
+          ...body,
+        },
+        create: {
+          ...body,
+        },
+      });
+
+      res.status(organic.id ? 203 : 201).json(organic);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
   async deleteOrganic(req: Request, res: Response) {
     try {
       const { id } = req.params;
