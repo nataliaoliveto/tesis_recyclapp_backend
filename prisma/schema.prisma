@@ -30,11 +30,10 @@ model User {
 // * CRUD OK
 model Address {
   id           Int         @id @default(autoincrement())
-  street       String      @db.VarChar(50)
-  flat         String      @db.VarChar(10)
-  city         String      @db.VarChar(50)
-  state        String      @db.VarChar(50)
-  postalCode   String      @db.VarChar(10)
+  street       String      @db.VarChar(50) //calle y numero
+  flat         String      @db.VarChar(10) //dpto?
+  city         String      @db.VarChar(50) //barrio/localidad
+  state        String      @db.VarChar(50) //provincia/CABA
   latitude     Float
   longitude    Float
   greenPointId Int?        @unique
@@ -44,6 +43,7 @@ model Address {
   User         User?       @relation(fields: [userId], references: [id])
 }
 
+// TODO: CRUD & INHERITANCE
 model UserStore {
   id          Int       @id @default(autoincrement())
   displayName String    @unique @db.Citext
@@ -51,6 +51,7 @@ model UserStore {
   Benefit     Benefit[]
 }
 
+// TODO: CRUD & INHERITANCE
 model UserCustomer {
   id              Int       @id @default(autoincrement())
   pointsCurrent   Int       @default(0)
@@ -94,6 +95,7 @@ model Subscription {
   advertisements Advertisement[]
 }
 
+// TODO: CRUD
 model Benefit {
   id                    Int            @id @default(autoincrement())
   name                  String         @db.VarChar(20)
@@ -101,7 +103,7 @@ model Benefit {
   endDate               DateTime       @db.Date
   quantity              Int
   pointsCost            Int
-  isActive              Boolean
+  isActive              Boolean        @default(true)
   userStoreId           Int
   userCustomerActiveId  Int
   userCustomerHistoryId Int
@@ -111,27 +113,29 @@ model Benefit {
   userCustomerHistory   UserCustomer[] @relation("benefitsHistory")
 }
 
+// * CRUD OK
 model GreenPoint {
   id                Int                 @id @default(autoincrement())
+  idpv              String              @unique @db.Citext
   name              String              @db.VarChar(50)
   availability      Json                @db.Json
-  type              String              @db.VarChar(15)
+  type              String              @db.VarChar(50)
+  cooperative       String              @db.VarChar(200)
   isArchived        Boolean             @default(false)
   Address           Address?
   materialComponent MaterialComponent[] @relation("GreenPointToMaterialComponent")
-  organic           Organic[]           @relation("GreenPointToOrganic")
+  hasOrganic        Boolean             @default(false)
 }
 
-// TODO: CRUD IN PROGRESS - GREEN POINT PENDING
+// * CRUD OK
 model Organic {
-  id            Int          @id @default(autoincrement())
-  name          String       @unique @db.Citext
+  id            Int     @id @default(autoincrement())
+  name          String  @unique @db.Citext
   isCompostable Boolean
-  isArchived    Boolean      @default(false)
-  GreenPoint    GreenPoint[] @relation("GreenPointToOrganic")
+  isArchived    Boolean @default(false)
 }
 
-// TODO: CRUD IN PROGRESS - POST PENDING
+// * CRUD OK
 model MaterialProduct {
   id                Int                 @id @default(autoincrement())
   name              String              @unique @db.Citext
@@ -140,7 +144,7 @@ model MaterialProduct {
   Post              Post[]
 }
 
-// TODO: CRUD IN PROGRESS - GREEN POINT PENDING
+// * CRUD OK
 model MaterialComponent {
   id              Int               @id @default(autoincrement())
   name            String            @unique @db.Citext
@@ -151,6 +155,8 @@ model MaterialComponent {
   MaterialProduct MaterialProduct[] @relation("MaterialProductToMaterialComponent")
 }
 
+// TODO: EVALUATE RANGE OF TYPES - WHAT DOES EACH ONE REPRESENT?
+// * ENUM OK
 enum RecyclableType {
   RECYCLABLE
   NO_RECYCLABLE
@@ -158,14 +164,15 @@ enum RecyclableType {
   ORGANIC
 }
 
+// * CRUD OK
 model Post {
   id                Int              @id @default(autoincrement())
   quantity          Int              @db.SmallInt
   description       String           @db.VarChar(255)
-  purpouse          String           @db.VarChar(10)
+  purpouse          PostPurpouse
   pointsAwared      Int
-  isActive          Boolean
-  isReserved        Boolean
+  isActive          Boolean          @default(true)
+  isReserved        Boolean          @default(false)
   userId            Int
   materialProductId Int
   isArchived        Boolean          @default(false)
@@ -175,26 +182,35 @@ model Post {
   PostCommitment    PostCommitment[]
 }
 
+// * ENUM OK
+enum PostPurpouse {
+  HAVE
+  WANT
+}
+
+// * CRUD OK
 model PostCommitment {
   id         Int     @id @default(autoincrement())
   tokenCode  String  @db.VarChar(25)
-  isActive   Boolean
+  isActive   Boolean @default(true)
   postId     Int
   isArchived Boolean @default(false)
   post       Post    @relation(fields: [postId], references: [id])
 }
 
+// * CRUD OK
 model Chat {
   id          Int           @id @default(autoincrement())
   startDate   DateTime      @db.Date
   endDate     DateTime?     @db.Date
-  isActive    Boolean
+  isActive    Boolean       @default(true)
   postId      Int
   isArchived  Boolean       @default(false)
   post        Post          @relation(fields: [postId], references: [id])
   ChatMessage ChatMessage[]
 }
 
+// * CRUD OK
 model ChatMessage {
   id         Int      @id @default(autoincrement())
   timestamp  DateTime @default(now())

@@ -8,6 +8,12 @@ import {
   advertisementRouter,
   organicRouter,
   materialProductRouter,
+  materialComponentRouter,
+  greenPointRouter,
+  postRouter,
+  postCommitmentRouter,
+  chatMessageRouter,
+  chatRouter,
 } from "./routes";
 
 import { PrismaClient, Prisma } from "@prisma/client";
@@ -24,6 +30,13 @@ app.use("/api", subscriptionRouter);
 app.use("/api", advertisementRouter);
 app.use("/api", organicRouter);
 app.use("/api", materialProductRouter);
+app.use("/api", materialComponentRouter);
+app.use("/api", greenPointRouter);
+app.use("/api", postRouter);
+app.use("/api", postCommitmentRouter);
+app.use("/api", chatMessageRouter);
+app.use("/api", chatRouter);
+
 app.use("*", (req, res) => {
   res.status(404).json({
     message: "Not Found",
@@ -31,13 +44,15 @@ app.use("*", (req, res) => {
 });
 
 async function main() {
+  // TODO: INSERT/UPDATE/DELETE record by ID where name = "";
+
   // * +++++++++++++++ USER +++++++++++++++
   async function mainUser() {
     console.log("mainUser");
     // await prisma.user.deleteMany();
     // await prisma.user.delete({
     //   where: {
-    //     id: 30,
+    //     id: 1,
     //   },
     // });
     // await prisma.user.findUnique({
@@ -68,7 +83,6 @@ async function main() {
     //         street: "Istiklal",
     //         latitude: 41.01384,
     //         longitude: 28.94966,
-    //         postalCode: "34433",
     //         state: "Istanbul",
     //       },
     //     },
@@ -106,7 +120,6 @@ async function main() {
     //     street: "Istiklal",
     //     latitude: 41.01384,
     //     longitude: 28.94966,
-    //     postalCode: "34433",
     //     state: "Istanbul",
     //   },
     // });
@@ -255,7 +268,7 @@ async function main() {
 
     // await prisma.materialComponent.delete({
     //   where: {
-    //     id: 17,
+    //     name: "Aceite vegetal usado".trim(),
     //   },
     // });
 
@@ -277,16 +290,37 @@ async function main() {
 
     // await prisma.materialComponent.upsert({
     //   where: {
-    //     name: "Tetra-brick".trim(),
+    //     name: "Tetra-brick0".trim(),
     //   },
     //   update: {
-    //     //   name: "Vidrio".trim(),
-    //     //   isRecyclable: true,
+    //     name: "Tetra-brick0".trim(),
+    //     MaterialProduct: {
+    //       set: [],
+    //       connect: [
+    //         {
+    //           id: 3,
+    //         },
+    //         // {
+    //         //   id: 9,
+    //         // },
+    //       ],
+    //     },
+    //     recyclableType: "RECYCLABLE",
     //   },
     //   create: {
-    //     name: "Tetra-brick".trim(),
+    //     name: "Tetra-brick0".trim(),
     //     description:
     //       "Limpiar y secar el tetra-brick de restos orgánicos. Compuesto en parte por cartón y en parte por aluminio. Tiene una complejidad diferente de reciclaje.",
+    //     // MaterialProduct: {
+    //     // connect: [
+    //     //   {
+    //     //     id: 2,
+    //     //   },
+    //     //   {
+    //     //     id: 9,
+    //     //   },
+    //     // ],
+    //     // },
     //     recyclableType: "RECYCLABLE",
     //   },
     // });
@@ -296,8 +330,60 @@ async function main() {
     //     name: "Plástico".trim(),
     //   },
     //   update: {
-    //     //   name: "Vidrio".trim(),
-    //     //   isRecyclable: true,
+    //     GreenPoint: {
+    //       //   set: [],
+    //       connectOrCreate: [
+    //         {
+    //           where: {
+    //             idpv: "PV-045".trim(),
+    //           },
+    //           create: {
+    //             idpv: "PV-045".trim(),
+    //             name: "PLAZA CASTELLEEE".trim(),
+    //             availability: [
+    //               {
+    //                 day: "Martes".trim(),
+    //                 hours: "11 a 17".trim(),
+    //                 organic: false,
+    //               },
+    //               {
+    //                 day: "Miércoles".trim(),
+    //                 hours: "11 a 17".trim(),
+    //                 organic: false,
+    //               },
+    //               {
+    //                 day: "Jueves".trim(),
+    //                 hours: "11 a 17".trim(),
+    //                 organic: false,
+    //               },
+    //               {
+    //                 day: "Viernes".trim(),
+    //                 hours: "11 a 17".trim(),
+    //                 organic: false,
+    //               },
+    //               {
+    //                 day: "Sábado".trim(),
+    //                 hours: "11 a 17".trim(),
+    //                 organic: false,
+    //               },
+    //             ],
+    //             type: "Punto Verde Con Atención",
+    //             cooperative: "Cooperativa de Trabajo Las Madreselvas",
+    //             Address: {
+    //               create: {
+    //                 city: "BELGRANO",
+    //                 flat: "",
+    //                 street: "CONDE y JURAMENTO",
+    //                 latitude: -34.567311427126597,
+    //                 longitude: -58.46463459803104,
+    //                 state: "CABA",
+    //               },
+    //             },
+    //             hasOrganic: true,
+    //           },
+    //         },
+    //       ],
+    //     },
     //   },
     //   create: {
     //     name: "Plástico".trim(),
@@ -322,38 +408,37 @@ async function main() {
 
     // await prisma.materialProduct.delete({
     //   where: {
-    //     id: 4,
+    //     id: 3,
     //   },
     // });
 
-    // TODO: INSERT/UPDATE/DELETE record by ID where name = "";
-    // TODO: check if it is possible to DELETE previous relationship through update connections or separate queries
     // await prisma.materialProduct.upsert({
     //   where: {
-    //     name: "Cartón de vino".trim(),
+    //     name: "Cartón de leche".trim(),
     //   },
     //   update: {
     //     materialComponent: {
-    //       connect: [
-    //         {
-    //           id: 16,
-    //         },
-    //         {
-    //           id: 18,
-    //         },
-    //       ],
+    //       set: [],
+    //       // connect: [
+    //       //   {
+    //       //     id: 16,
+    //       //   },
+    //       //   {
+    //       //     id: 20,
+    //       //   },
+    //       // ],
     //     },
     //   },
     //   create: {
-    //     name: "Cartón de vino".trim(),
+    //     name: "Cartón de leche".trim(),
     //     materialComponent: {
     //       connect: [
     //         {
     //           id: 16,
     //         },
-    //         // {
-    //         //   id: 18,
-    //         // },
+    //         {
+    //           id: 20,
+    //         },
     //       ],
     //     },
     //   },
@@ -367,6 +452,382 @@ async function main() {
     // });
   }
 
+  // * +++++++++++++++ GREEN POINT +++++++++++++++
+  async function mainGreenPoint() {
+    console.log("mainGreenPoint");
+
+    // await prisma.greenPoint.delete({
+    //   where: {
+    //     id: 2,
+    //   },
+    // });
+
+    // await prisma.greenPoint.upsert({
+    //   where: {
+    //     idpv: "PV-045".trim(),
+    //     // name: "Green Point 01".trim(),
+    //   },
+    //   update: {
+    //     // cooperative: "Cooperativa de Trabajo Las 2",
+    //     // materialComponent: {
+    //     //   //   set: [],
+    //     //   connectOrCreate: [
+    //     //     {
+    //     //       where: {
+    //     //         name: "Aceite vegetal usado".trim(),
+    //     //       },
+    //     //       create: {
+    //     //         name: "Aceite vegetal usado".trim(),
+    //     //         recyclableType: "RECYCLABLE",
+    //     //         description: "",
+    //     //       },
+    //     //     },
+    //     //     {
+    //     //       where: {
+    //     //         name: "Pilas".trim(),
+    //     //       },
+    //     //       create: {
+    //     //         name: "Pilas".trim(),
+    //     //         recyclableType: "NO_RECYCLABLE",
+    //     //         description: "",
+    //     //       },
+    //     //     },
+    //     //     {
+    //     //       where: { name: "Tetra-brik" },
+    //     //       create: {
+    //     //         name: "Tetra-brik",
+    //     //         recyclableType: "RECYCLABLE",
+    //     //         description: "",
+    //     //       },
+    //     //     },
+    //     //   ],
+    //     // },
+    //   },
+    //   create: {
+    //     idpv: "PV-045".trim(),
+    //     name: "PLAZA CASTELLEEEEEE".trim(),
+    //     availability: [
+    //       {
+    //         day: "Martes".trim(),
+    //         hours: "11 a 17".trim(),
+    //         organic: false,
+    //       },
+    //       {
+    //         day: "Miércoles".trim(),
+    //         hours: "11 a 17".trim(),
+    //         organic: false,
+    //       },
+    //       {
+    //         day: "Jueves".trim(),
+    //         hours: "11 a 17".trim(),
+    //         organic: false,
+    //       },
+    //       {
+    //         day: "Viernes".trim(),
+    //         hours: "11 a 17".trim(),
+    //         organic: false,
+    //       },
+    //       {
+    //         day: "Sábado".trim(),
+    //         hours: "11 a 17".trim(),
+    //         organic: false,
+    //       },
+    //     ],
+    //     type: "Punto Verde Con Atención",
+    //     cooperative: "Cooperativa de Trabajo Las Madreselvas",
+    //     Address: {
+    //       create: {
+    //         city: "BELGRANO",
+    //         flat: "",
+    //         street: "CONDE y JURAMENTO",
+    //         latitude: -34.567311427126597,
+    //         longitude: -58.46463459803104,
+    //         state: "CABA",
+    //       },
+    //     },
+    //     materialComponent: {
+    //       connectOrCreate: [
+    //         {
+    //           where: {
+    //             name: "Aceite vegetal usado".trim(),
+    //           },
+    //           create: {
+    //             name: "Aceite vegetal usado".trim(),
+    //             recyclableType: "RECYCLABLE",
+    //             description: "",
+    //           },
+    //         },
+    //         {
+    //           where: {
+    //             name: "Pilas".trim(),
+    //           },
+    //           create: {
+    //             name: "Pilas".trim(),
+    //             recyclableType: "NO_RECYCLABLE",
+    //             description: "",
+    //           },
+    //         },
+    //         {
+    //           where: { name: "Tetra-brik" },
+    //           create: {
+    //             name: "Tetra-brik",
+    //             recyclableType: "RECYCLABLE",
+    //             description: "",
+    //           },
+    //         },
+    //       ],
+    //       // connectOrCreate: [
+    //       // { name: 'RAEES' },
+    //       // { name: 'Aceite vegetal usado'},
+    //       // { name: 'Pilas' },
+    //       // { name: 'Papel' },
+    //       // { name: 'Cartón' },
+    //       // { name: 'Vidrio' },
+    //       // { name: 'Metal' },
+    //       // { name: 'Plástico' },
+    //       // { name: 'Tetra-brik' },
+    //       // { name: 'Telgopor' }
+    //       // ],
+    //     },
+    //     hasOrganic: true,
+    //     // "materiales":"RAEES \/ Aceite vegetal usado (en botellas cerradas) \/ Pilas\/ Papel \/ Cartón \/ Vidrio \/ Metal \/ Plástico \/ Tetra-brik \/ Telgopor \/ Organicos (jueves)",
+    //   },
+    // });
+  }
+
+  // * +++++++++++++++ POST +++++++++++++++
+  async function mainPost() {
+    console.log("mainPost");
+
+    // await prisma.post.delete({
+    //   where: {
+    //     id: 2,
+    //   },
+    // });
+
+    // await prisma.post.upsert({
+    //   where: {
+    //     id: 2,
+    //   },
+    //   update: {},
+    //   create: {
+    //     quantity: 3,
+    //     description: "frascos de vidrio de mermelada tapa verde la campagnola",
+    //     purpouse: "WANT",
+    //     pointsAwared: 50,
+    //     userId: 1,
+    //     materialProductId: 3,
+    //   },
+    // });
+  }
+
+  // * +++++++++++++++ POSTCOMMIT +++++++++++++++
+  async function mainPostCommitment() {
+    console.log("mainPostCommitment");
+
+    // await prisma.postCommitment.delete({
+    //   where: {
+    //     id: 3,
+    //   },
+    // });
+
+    // await prisma.postCommitment.upsert({
+    //   where: {
+    //     id: 3,
+    //   },
+    //   update: {},
+    //   create: {
+    //     tokenCode: "56406450",
+    //     isActive: true,
+    //     postId: 1,
+    //   },
+    // });
+  }
+
+  // * +++++++++++++++ CHAT +++++++++++++++
+  async function mainChat() {
+    console.log("mainChat");
+
+    // await prisma.chat.delete({
+    //   where: {
+    //     id: 1,
+    //   },
+    // });
+
+    // await prisma.chat.upsert({
+    //   where: {
+    //     id: 2,
+    //   },
+    //   update: {
+    //     startDate: new Date().toISOString(),
+    //     endDate: new Date().toISOString(),
+    //     isActive: false,
+    //     postId: 2,
+    //   },
+    //   create: {
+    //     startDate: new Date().toISOString(),
+    //     isActive: true,
+    //     postId: 2,
+    //   },
+    // });
+  }
+
+  // * +++++++++++++++ CHAT MESSAGE +++++++++++++++
+  async function mainChatMessage() {
+    console.log("mainChatMessage");
+
+    // await prisma.chatMessage.delete({
+    //   where: {
+    //     id: 5,
+    //   },
+    // });
+
+    // await prisma.chatMessage.upsert({
+    //   where: {
+    //     id: 3,
+    //   },
+    //   update: {},
+    //   create: {
+    //     chatId: 3,
+    //     // chat: {
+    //     //   connect: {
+    //     //     id: 3,
+    //     //   },
+    //     // },
+    //     receiverId: 1,
+    //     // receiver: {
+    //     //   connect: {
+    //     //     id: 1,
+    //     //   },
+    //     // },
+    //     senderId: 3,
+    //     // sender: {
+    //     //   connect: {
+    //     //     id: 3,
+    //     //   },
+    //     // },
+    //     message: "HOLAHOALHOALA",
+    //   },
+    // });
+  }
+
+  // TODO: +++++++++++++++ USER STORE +++++++++++++++
+  async function mainUserStore() {
+    console.log("mainUserStore");
+
+    // await prisma.userStore.delete({
+    //   where: {
+    //     id: 5,
+    //   },
+    // });
+
+    // await prisma.userStore.upsert({
+    //   where: {
+    //     id: 3,
+    //   },
+    //   update: {},
+    //   create: {
+    //     chatId: 3,
+    //     // chat: {
+    //     //   connect: {
+    //     //     id: 3,
+    //     //   },
+    //     // },
+    //     receiverId: 1,
+    //     // receiver: {
+    //     //   connect: {
+    //     //     id: 1,
+    //     //   },
+    //     // },
+    //     senderId: 3,
+    //     // sender: {
+    //     //   connect: {
+    //     //     id: 3,
+    //     //   },
+    //     // },
+    //     message: "HOLAHOALHOALA",
+    //   },
+    // });
+  }
+
+  // TODO: +++++++++++++++ USER CUSTOMER +++++++++++++++
+  async function mainUserCustomer() {
+    console.log("mainUserCustomer");
+
+    // await prisma.userCustomer.delete({
+    //   where: {
+    //     id: 5,
+    //   },
+    // });
+
+    // await prisma.userCustomer.upsert({
+    //   where: {
+    //     id: 3,
+    //   },
+    //   update: {},
+    //   create: {
+    //     chatId: 3,
+    //     // chat: {
+    //     //   connect: {
+    //     //     id: 3,
+    //     //   },
+    //     // },
+    //     receiverId: 1,
+    //     // receiver: {
+    //     //   connect: {
+    //     //     id: 1,
+    //     //   },
+    //     // },
+    //     senderId: 3,
+    //     // sender: {
+    //     //   connect: {
+    //     //     id: 3,
+    //     //   },
+    //     // },
+    //     message: "HOLAHOALHOALA",
+    //   },
+    // });
+  }
+
+  // TODO: +++++++++++++++ BENEFIT +++++++++++++++
+  async function mainBenefit() {
+    console.log("mainBenefit");
+
+    // await prisma.benefit.delete({
+    //   where: {
+    //     id: 5,
+    //   },
+    // });
+
+    // await prisma.benefit.upsert({
+    //   where: {
+    //     id: 3,
+    //   },
+    //   update: {},
+    //   create: {
+    //     chatId: 3,
+    //     // chat: {
+    //     //   connect: {
+    //     //     id: 3,
+    //     //   },
+    //     // },
+    //     receiverId: 1,
+    //     // receiver: {
+    //     //   connect: {
+    //     //     id: 1,
+    //     //   },
+    //     // },
+    //     senderId: 3,
+    //     // sender: {
+    //     //   connect: {
+    //     //     id: 3,
+    //     //   },
+    //     // },
+    //     message: "HOLAHOALHOALA",
+    //   },
+    // });
+  }
+
   // ! +++++++++++++++ RUN +++++++++++++++
   await mainUser();
   await mainAddress();
@@ -376,6 +837,14 @@ async function main() {
   await mainOrganic();
   await mainMaterialComponent();
   await mainMaterialProduct();
+  await mainGreenPoint();
+  await mainPost();
+  await mainPostCommitment();
+  await mainChat();
+  await mainChatMessage();
+  await mainUserStore();
+  await mainUserCustomer();
+  await mainBenefit();
 
   // ? +++++++++++++++ DISPLAY +++++++++++++++
   async function mainDisplay() {
@@ -387,7 +856,12 @@ async function main() {
     // });
     // const ratings = await prisma.rating.findMany();
     //const subscriptions = await prisma.subscription.findMany();
-    const materialProducts = await prisma.materialProduct.findMany();
+    const arrayFindMany = await prisma.userStore.findMany({
+      // include: {
+      //   Address: true,
+      //   materialComponent: true,
+      // },
+    });
 
     // ({
     //   where: {
@@ -401,7 +875,7 @@ async function main() {
     // console.log("users", JSON.stringify(users, null, 2));
     // console.log("ratings", JSON.stringify(ratings, null, 2));
     //console.log("subscriptions", JSON.stringify(subscriptions, null, 2));
-    console.log("organics", JSON.stringify(materialProducts, null, 2));
+    console.log("arrayFindMany", JSON.stringify(arrayFindMany, null, 2));
   }
 
   // ! +++++++++++++++ RUN +++++++++++++++
