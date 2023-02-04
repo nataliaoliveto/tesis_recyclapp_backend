@@ -44,8 +44,6 @@ app.use("*", (req, res) => {
 });
 
 async function main() {
-  // TODO: INSERT/UPDATE/DELETE record by ID where name = "";
-
   // * +++++++++++++++ USER +++++++++++++++
   async function mainUser() {
     console.log("mainUser");
@@ -91,6 +89,7 @@ async function main() {
     //     address: true,
     //   },
     // });
+
     // await prisma.user.create({
     //   data: {
     //     name: "Sarah",
@@ -100,6 +99,7 @@ async function main() {
     //     password: "password",
     //     username: "sarahprisma",
     //     address: {},
+    //     userType: "CUSTOMER",
     //   },
     // });
   }
@@ -619,6 +619,12 @@ async function main() {
     //     materialProductId: 3,
     //   },
     // });
+
+    // await prisma.post.findMany({
+    //   where: {
+    //     pointsAwared: 50,
+    //   },
+    // });
   }
 
   // * +++++++++++++++ POSTCOMMIT +++++++++++++++
@@ -717,35 +723,20 @@ async function main() {
 
     // await prisma.userStore.delete({
     //   where: {
-    //     id: 5,
+    //     id: 1,
     //   },
     // });
 
     // await prisma.userStore.upsert({
     //   where: {
-    //     id: 3,
+    //     userId: 3,
     //   },
-    //   update: {},
+    //   update: {
+    //     userId: 3,
+    //   },
     //   create: {
-    //     chatId: 3,
-    //     // chat: {
-    //     //   connect: {
-    //     //     id: 3,
-    //     //   },
-    //     // },
-    //     receiverId: 1,
-    //     // receiver: {
-    //     //   connect: {
-    //     //     id: 1,
-    //     //   },
-    //     // },
-    //     senderId: 3,
-    //     // sender: {
-    //     //   connect: {
-    //     //     id: 3,
-    //     //   },
-    //     // },
-    //     message: "HOLAHOALHOALA",
+    //     userId: 3,
+    //     displayName: "store1",
     //   },
     // });
   }
@@ -754,37 +745,133 @@ async function main() {
   async function mainUserCustomer() {
     console.log("mainUserCustomer");
 
-    // await prisma.userCustomer.delete({
+    // await prisma.user.delete({
     //   where: {
-    //     id: 5,
+    //     id: 1,
+    //   },
+    // });
+
+    //USER
+    // const user = await prisma.user.create({
+    //   data: {
+    //     name: "sarasd",
+    //     surname: "PrisAASDma",
+    //     mail: "sarahASDSD@prisma.io",
+    //     phone: "01144446666",
+    //     password: "password",
+    //     username: "sarahprismaASD",
+    //     address: {},
+    //     userType: "CUSTOMER",
     //   },
     // });
 
     // await prisma.userCustomer.upsert({
     //   where: {
-    //     id: 3,
+    //     userId: 4,
     //   },
-    //   update: {},
+    //   update: {
+    //     userId: 4,
+    //     benefitsActive: {
+    //       //   set: [],
+    //       connectOrCreate: [
+    //         {
+    //           where: {
+    //             id: 3,
+    //           },
+    //           create: {
+    //             name: "benfecio2",
+    //             type: "DISCOUNT",
+    //             endDate: new Date().toISOString(),
+    //             quantity: 2,
+    //             pointsCost: 400,
+    //             userStoreId: 1,
+    //           },
+    //         },
+    //       ],
+    //     },
+    //     benefitsHistory: {
+    //       //   set: [],
+    //       connectOrCreate: [
+    //         {
+    //           where: {
+    //             id: 2,
+    //           },
+    //           create: {
+    //             name: "benfecio2",
+    //             type: "DISCOUNT",
+    //             endDate: new Date().toISOString(),
+    //             quantity: 2,
+    //             pointsCost: 400,
+    //             userStoreId: 1,
+    //           },
+    //         },
+    //         {
+    //           where: {
+    //             id: 3,
+    //           },
+    //           create: {
+    //             name: "benfecio2",
+    //             type: "DISCOUNT",
+    //             endDate: new Date().toISOString(),
+    //             quantity: 2,
+    //             pointsCost: 400,
+    //             userStoreId: 1,
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   },
     //   create: {
-    //     chatId: 3,
-    //     // chat: {
-    //     //   connect: {
-    //     //     id: 3,
-    //     //   },
-    //     // },
-    //     receiverId: 1,
-    //     // receiver: {
-    //     //   connect: {
-    //     //     id: 1,
-    //     //   },
-    //     // },
-    //     senderId: 3,
-    //     // sender: {
-    //     //   connect: {
-    //     //     id: 3,
-    //     //   },
-    //     // },
-    //     message: "HOLAHOALHOALA",
+    //     userId: 4,
+    //     benefitsActive: {
+    //       //   set: [],
+    //       connectOrCreate: [
+    //         {
+    //           where: {
+    //             id: 3,
+    //           },
+    //           create: {
+    //             name: "benfecio2",
+    //             type: "DISCOUNT",
+    //             endDate: new Date().toISOString(),
+    //             quantity: 2,
+    //             pointsCost: 400,
+    //             userStoreId: 1,
+    //           },
+    //         },
+    //       ],
+    //     },
+    //     benefitsHistory: {
+    //       //   set: [],
+    //       connectOrCreate: [
+    //         {
+    //           where: {
+    //             id: 2,
+    //           },
+    //           create: {
+    //             name: "benfecio2",
+    //             type: "DISCOUNT",
+    //             endDate: new Date().toISOString(),
+    //             quantity: 2,
+    //             pointsCost: 400,
+    //             userStoreId: 1,
+    //           },
+    //         },
+    //         {
+    //           where: {
+    //             id: 3,
+    //           },
+    //           create: {
+    //             name: "benfecio2",
+    //             type: "DISCOUNT",
+    //             endDate: new Date().toISOString(),
+    //             quantity: 2,
+    //             pointsCost: 400,
+    //             userStoreId: 1,
+    //           },
+    //         },
+    //       ],
+    //     },
     //   },
     // });
   }
@@ -801,29 +888,47 @@ async function main() {
 
     // await prisma.benefit.upsert({
     //   where: {
-    //     id: 3,
+    //     id: 4,
     //   },
-    //   update: {},
+    //   update: {
+    //     name: "",
+    //     userCustomerActive: {
+    //       set: [],
+    //     },
+    //   },
     //   create: {
-    //     chatId: 3,
-    //     // chat: {
-    //     //   connect: {
-    //     //     id: 3,
-    //     //   },
-    //     // },
-    //     receiverId: 1,
-    //     // receiver: {
-    //     //   connect: {
-    //     //     id: 1,
-    //     //   },
-    //     // },
-    //     senderId: 3,
-    //     // sender: {
-    //     //   connect: {
-    //     //     id: 3,
-    //     //   },
-    //     // },
-    //     message: "HOLAHOALHOALA",
+    //     name: "benfecio2",
+    //     type: "DISCOUNT",
+    //     endDate: new Date().toISOString(),
+    //     quantity: 2,
+    //     pointsCost: 400,
+    //     userStoreId: 1,
+    //     userCustomerActive: {
+    //       // set: [{}],
+    //       // connectOrCreate: [
+    //       //   {
+    //       //     where: {
+    //       //       id: 6,
+    //       //     },
+    //       //     create: {
+    //       //       userId: 3,
+    //       //     },
+    //       //   },
+    //       // ],
+    //     },
+    //     userCustomerHistory: {
+    //       //   set: [],
+    //       connectOrCreate: [
+    //         {
+    //           where: {
+    //             id: 6,
+    //           },
+    //           create: {
+    //             userId: 3,
+    //           },
+    //         },
+    //       ],
+    //     },
     //   },
     // });
   }

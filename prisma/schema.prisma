@@ -19,12 +19,21 @@ model User {
   password            String          @db.VarChar(20)
   username            String          @unique @db.Citext
   isArchived          Boolean         @default(false)
+  userType            UserType
   address             Address[]
   Advertisement       Advertisement[]
   ChatMessageReceived ChatMessage[]   @relation("chatReceiver")
   ChatMessageSent     ChatMessage[]   @relation("chatSender")
   Post                Post[]
   Rating              Rating[]
+  UserStore           UserStore?
+  UserCustomer        UserCustomer?
+}
+
+// * ENUM OK
+enum UserType {
+  CUSTOMER
+  STORE
 }
 
 // * CRUD OK
@@ -43,20 +52,22 @@ model Address {
   User         User?       @relation(fields: [userId], references: [id])
 }
 
-// TODO: CRUD & INHERITANCE
+// * CRUD OK
 model UserStore {
   id          Int       @id @default(autoincrement())
   displayName String    @unique @db.Citext
-  isArchived  Boolean   @default(false)
+  userId      Int       @unique
+  User        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   Benefit     Benefit[]
 }
 
-// TODO: CRUD & INHERITANCE
+// * CRUD OK
 model UserCustomer {
   id              Int       @id @default(autoincrement())
   pointsCurrent   Int       @default(0)
   pointsTotal     Int       @default(0)
-  isArchived      Boolean   @default(false)
+  userId          Int       @unique
+  User            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   benefitsActive  Benefit[] @relation("benefitsActive")
   benefitsHistory Benefit[] @relation("benefitsHistory")
 }
@@ -95,22 +106,28 @@ model Subscription {
   advertisements Advertisement[]
 }
 
-// TODO: CRUD
+// * CRUD OK
 model Benefit {
-  id                    Int            @id @default(autoincrement())
-  name                  String         @db.VarChar(20)
-  type                  String         @db.VarChar(10)
-  endDate               DateTime       @db.Date
-  quantity              Int
-  pointsCost            Int
-  isActive              Boolean        @default(true)
-  userStoreId           Int
-  userCustomerActiveId  Int
-  userCustomerHistoryId Int
-  isArchived            Boolean        @default(false)
-  userStore             UserStore      @relation(fields: [userStoreId], references: [id])
-  userCustomerActive    UserCustomer[] @relation("benefitsActive")
-  userCustomerHistory   UserCustomer[] @relation("benefitsHistory")
+  id                  Int            @id @default(autoincrement())
+  name                String         @db.VarChar(20)
+  type                BenefitType
+  endDate             DateTime       @db.Date
+  quantity            Int
+  pointsCost          Int
+  isActive            Boolean        @default(true)
+  userStoreId         Int
+  isArchived          Boolean        @default(false)
+  userStore           UserStore      @relation(fields: [userStoreId], references: [id])
+  userCustomerActive  UserCustomer[] @relation("benefitsActive")
+  userCustomerHistory UserCustomer[] @relation("benefitsHistory")
+}
+
+// TODO: EVALUATE RANGE OF TYPES - WHAT DOES EACH ONE REPRESENT?
+// * ENUM OK
+enum BenefitType {
+  DISCOUNT
+  PRODUCT
+  DOUBLEPRODUCT
 }
 
 // * CRUD OK
@@ -167,6 +184,7 @@ enum RecyclableType {
 // * CRUD OK
 model Post {
   id                Int              @id @default(autoincrement())
+  postNumber        Int              @unique @db.SmallInt
   quantity          Int              @db.SmallInt
   description       String           @db.VarChar(255)
   purpouse          PostPurpouse
