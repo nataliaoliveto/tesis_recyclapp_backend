@@ -11,13 +11,14 @@ datasource db {
 
 // * CRUD OK
 model User {
-  id                  Int             @id @default(autoincrement())
+  id                  String          @id @default(cuid())
   name                String          @db.VarChar(30)
   surname             String          @db.VarChar(30)
   mail                String          @unique @db.Citext
   phone               String          @db.VarChar(20)
   password            String          @db.VarChar(20)
   username            String          @unique @db.Citext
+  imageId             String?         @unique
   isArchived          Boolean         @default(false)
   userType            UserType
   address             Address[]
@@ -25,9 +26,10 @@ model User {
   ChatMessageReceived ChatMessage[]   @relation("chatReceiver")
   ChatMessageSent     ChatMessage[]   @relation("chatSender")
   Post                Post[]
-  Rating              Rating[]
+  Rating              Rating?
   UserStore           UserStore?
   UserCustomer        UserCustomer?
+  Image               Image?          @relation(fields: [imageId], references: [id], onDelete: SetNull)
 }
 
 // * ENUM OK
@@ -38,15 +40,15 @@ enum UserType {
 
 // * CRUD OK
 model Address {
-  id           Int         @id @default(autoincrement())
+  id           String      @id @default(cuid())
   street       String      @db.VarChar(50) //calle y numero
   flat         String      @db.VarChar(10) //dpto?
   city         String      @db.VarChar(50) //barrio/localidad
   state        String      @db.VarChar(50) //provincia/CABA
   latitude     Float
   longitude    Float
-  greenPointId Int?        @unique
-  userId       Int?
+  greenPointId String?     @unique
+  userId       String?
   isArchived   Boolean     @default(false)
   GreenPoint   GreenPoint? @relation(fields: [greenPointId], references: [id])
   User         User?       @relation(fields: [userId], references: [id])
@@ -54,19 +56,19 @@ model Address {
 
 // * CRUD OK
 model UserStore {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(cuid())
   displayName String    @unique @db.Citext
-  userId      Int       @unique
+  userId      String    @unique
   User        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   Benefit     Benefit[]
 }
 
 // * CRUD OK
 model UserCustomer {
-  id              Int       @id @default(autoincrement())
+  id              String    @id @default(cuid())
   pointsCurrent   Int       @default(0)
   pointsTotal     Int       @default(0)
-  userId          Int       @unique
+  userId          String    @unique
   User            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   benefitsActive  Benefit[] @relation("benefitsActive")
   benefitsHistory Benefit[] @relation("benefitsHistory")
@@ -74,31 +76,33 @@ model UserCustomer {
 
 // * CRUD OK
 model Rating {
-  id         Int     @id @default(autoincrement())
+  id         String  @id @default(cuid())
   text       String  @db.VarChar(255)
   value      Int
-  userId     Int
+  userId     String  @unique
   isArchived Boolean @default(false)
   user       User    @relation(fields: [userId], references: [id])
 }
 
 // * CRUD OK
 model Advertisement {
-  id             Int          @id @default(autoincrement())
+  id             String       @id @default(cuid())
   durationStart  DateTime     @db.Date
   durationEnd    DateTime     @db.Date
   displayName    String       @db.VarChar(30)
   text           String       @db.VarChar(255)
-  userId         Int
-  subscriptionId Int
+  imageId        String?      @unique
+  userId         String
+  subscriptionId String
   isArchived     Boolean      @default(false)
   subscription   Subscription @relation(fields: [subscriptionId], references: [id])
   user           User         @relation(fields: [userId], references: [id])
+  Image          Image?       @relation(fields: [imageId], references: [id], onDelete: SetNull)
 }
 
 // * CRUD OK
 model Subscription {
-  id             Int             @id @default(autoincrement())
+  id             String          @id @default(cuid())
   name           String          @unique @db.Citext
   amount         Float
   duration       Int
@@ -108,14 +112,14 @@ model Subscription {
 
 // * CRUD OK
 model Benefit {
-  id                  Int            @id @default(autoincrement())
+  id                  String         @id @default(cuid())
   name                String         @db.VarChar(20)
   type                BenefitType
   endDate             DateTime       @db.Date
   quantity            Int
   pointsCost          Int
+  userStoreId         String
   isActive            Boolean        @default(true)
-  userStoreId         Int
   isArchived          Boolean        @default(false)
   userStore           UserStore      @relation(fields: [userStoreId], references: [id])
   userCustomerActive  UserCustomer[] @relation("benefitsActive")
@@ -132,42 +136,48 @@ enum BenefitType {
 
 // * CRUD OK
 model GreenPoint {
-  id                Int                 @id @default(autoincrement())
+  id                String              @id @default(cuid())
   idpv              String              @unique @db.Citext
   name              String              @db.VarChar(50)
   availability      Json                @db.Json
   type              String              @db.VarChar(50)
   cooperative       String              @db.VarChar(200)
+  hasOrganic        Boolean             @default(false)
   isArchived        Boolean             @default(false)
   Address           Address?
   materialComponent MaterialComponent[] @relation("GreenPointToMaterialComponent")
-  hasOrganic        Boolean             @default(false)
 }
 
 // * CRUD OK
 model Organic {
-  id            Int     @id @default(autoincrement())
+  id            String  @id @default(cuid())
   name          String  @unique @db.Citext
+  imageId       String? @unique
   isCompostable Boolean
   isArchived    Boolean @default(false)
+  Image         Image?  @relation(fields: [imageId], references: [id], onDelete: SetNull)
 }
 
 // * CRUD OK
 model MaterialProduct {
-  id                Int                 @id @default(autoincrement())
+  id                String              @id @default(cuid())
   name              String              @unique @db.Citext
+  imageId           String?             @unique
   isArchived        Boolean             @default(false)
+  Image             Image?              @relation(fields: [imageId], references: [id], onDelete: SetNull)
   materialComponent MaterialComponent[] @relation("MaterialProductToMaterialComponent")
   Post              Post[]
 }
 
 // * CRUD OK
 model MaterialComponent {
-  id              Int               @id @default(autoincrement())
+  id              String            @id @default(cuid())
   name            String            @unique @db.Citext
   recyclableType  RecyclableType
   description     String            @db.VarChar(1024)
+  imageId         String?           @unique
   isArchived      Boolean           @default(false)
+  Image           Image?            @relation(fields: [imageId], references: [id], onDelete: SetNull)
   GreenPoint      GreenPoint[]      @relation("GreenPointToMaterialComponent")
   MaterialProduct MaterialProduct[] @relation("MaterialProductToMaterialComponent")
 }
@@ -183,17 +193,19 @@ enum RecyclableType {
 
 // * CRUD OK
 model Post {
-  id                Int              @id @default(autoincrement())
+  id                String           @id @default(cuid())
   postNumber        Int              @unique @db.SmallInt
   quantity          Int              @db.SmallInt
   description       String           @db.VarChar(255)
   purpouse          PostPurpouse
   pointsAwared      Int
+  userId            String
+  materialProductId String
+  imageId           String?          @unique
   isActive          Boolean          @default(true)
   isReserved        Boolean          @default(false)
-  userId            Int
-  materialProductId Int
   isArchived        Boolean          @default(false)
+  Image             Image?           @relation(fields: [imageId], references: [id], onDelete: SetNull)
   Chat              Chat[]
   materialProduct   MaterialProduct  @relation(fields: [materialProductId], references: [id])
   userPost          User             @relation(fields: [userId], references: [id])
@@ -208,21 +220,21 @@ enum PostPurpouse {
 
 // * CRUD OK
 model PostCommitment {
-  id         Int     @id @default(autoincrement())
+  id         String  @id @default(cuid())
+  postId     String
   tokenCode  String  @db.VarChar(25)
   isActive   Boolean @default(true)
-  postId     Int
   isArchived Boolean @default(false)
   post       Post    @relation(fields: [postId], references: [id])
 }
 
 // * CRUD OK
 model Chat {
-  id          Int           @id @default(autoincrement())
+  id          String        @id @default(cuid())
+  postId      String
   startDate   DateTime      @db.Date
   endDate     DateTime?     @db.Date
   isActive    Boolean       @default(true)
-  postId      Int
   isArchived  Boolean       @default(false)
   post        Post          @relation(fields: [postId], references: [id])
   ChatMessage ChatMessage[]
@@ -230,14 +242,28 @@ model Chat {
 
 // * CRUD OK
 model ChatMessage {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(cuid())
   timestamp  DateTime @default(now())
   message    String   @db.VarChar(255)
-  senderId   Int
-  receiverId Int
-  chatId     Int
+  senderId   String
+  receiverId String
+  chatId     String
   isArchived Boolean  @default(false)
   chat       Chat     @relation(fields: [chatId], references: [id])
   receiver   User     @relation("chatReceiver", fields: [receiverId], references: [id])
   sender     User     @relation("chatSender", fields: [senderId], references: [id])
+}
+
+model Image {
+  id                String             @id @default(cuid())
+  publicId          String             @unique
+  format            String
+  version           String
+  url               String
+  User              User?
+  Advertisement     Advertisement?
+  Organic           Organic?
+  MaterialProduct   MaterialProduct?
+  MaterialComponent MaterialComponent?
+  Post              Post?
 }

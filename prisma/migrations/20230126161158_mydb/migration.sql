@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "GreenPoint" ALTER COLUMN "type" SET DATA TYPE VARCHAR(50);

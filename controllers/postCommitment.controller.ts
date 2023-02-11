@@ -17,7 +17,7 @@ const postCommitmentController = {
     try {
       const postCommitment = await prisma.postCommitment.findUnique({
         where: {
-          id: Number(id),
+          id: id,
         },
       });
       res.status(200).json(postCommitment);
@@ -44,7 +44,7 @@ const postCommitmentController = {
     try {
       const postCommitment = await prisma.postCommitment.update({
         where: {
-          id: Number(id),
+          id: id,
         },
         data: {
           ...body,
@@ -60,7 +60,7 @@ const postCommitmentController = {
     try {
       const postCommitment = await prisma.postCommitment.delete({
         where: {
-          id: Number(id),
+          id: id,
         },
       });
       res.status(200).json(postCommitment);

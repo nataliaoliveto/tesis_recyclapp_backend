@@ -16,7 +16,7 @@ const subscriptionController = {
     try {
       const subscription = await prisma.subscription.findUnique({
         where: {
-          id: Number(req.params.id),
+          id: req.params.id,
         },
       });
       res.status(200).json(subscription);
@@ -42,7 +42,7 @@ const subscriptionController = {
     try {
       const subscription = await prisma.subscription.update({
         where: {
-          id: Number(req.params.id),
+          id: req.params.id,
         },
         data: {
           ...body,
@@ -57,7 +57,7 @@ const subscriptionController = {
     try {
       const subscription = await prisma.subscription.delete({
         where: {
-          id: Number(req.params.id),
+          id: req.params.id,
         },
       });
       res.status(200).json(subscription);

@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+
 import {
   userRouter,
   addressRouter,
@@ -14,9 +15,12 @@ import {
   postCommitmentRouter,
   chatMessageRouter,
   chatRouter,
+  imageRouter,
 } from "./routes";
 
 import { PrismaClient, Prisma } from "@prisma/client";
+import imagesController from "./controllers/images.controller";
+import { handleDelete } from "./utils/cloudinary.config";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -36,6 +40,7 @@ app.use("/api", postRouter);
 app.use("/api", postCommitmentRouter);
 app.use("/api", chatMessageRouter);
 app.use("/api", chatRouter);
+app.use("/api", imageRouter);
 
 app.use("*", (req, res) => {
   res.status(404).json({
@@ -44,7 +49,6 @@ app.use("*", (req, res) => {
 });
 
 async function main() {
-  // * +++++++++++++++ USER +++++++++++++++
   async function mainUser() {
     console.log("mainUser");
     // await prisma.user.deleteMany();
@@ -60,10 +64,10 @@ async function main() {
     // });
     // await prisma.user.update({
     //   where: {
-    //     id: 32,
+    //     id: "cle0gegsm0000v8dwm58hlynv",
     //   },
     //   data: {
-    //     isArchived: true,
+    //     imageId: "cle0gipph0000v8f84s5uycmc",
     //   },
     // });
     // await prisma.user.create({
@@ -104,7 +108,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ ADDRESS +++++++++++++++
   async function mainAddress() {
     console.log("mainAddress");
 
@@ -125,7 +128,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ RATING +++++++++++++++
   async function mainRating() {
     console.log("mainRating");
     // await prisma.rating.create({
@@ -154,7 +156,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ SUBSCRIPTION +++++++++++++++
   async function mainSubscription() {
     console.log("mainSubscription");
     // await prisma.subscription.createMany({
@@ -184,7 +185,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ ADVERTISEMENT +++++++++++++++
   async function mainAdvertisement() {
     console.log("mainAdvertisement");
     // await prisma.advertisement.create({
@@ -237,7 +237,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ ORGANICO +++++++++++++++
   async function mainOrganic() {
     console.log("mainOrganic");
 
@@ -262,7 +261,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ MATERIAL COMPONENT +++++++++++++++
   async function mainMaterialComponent() {
     console.log("mainMaterialComponent");
 
@@ -402,7 +400,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ MATERIAL PRODUCT +++++++++++++++
   async function mainMaterialProduct() {
     console.log("mainMaterialProduct");
 
@@ -452,7 +449,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ GREEN POINT +++++++++++++++
   async function mainGreenPoint() {
     console.log("mainGreenPoint");
 
@@ -595,7 +591,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ POST +++++++++++++++
   async function mainPost() {
     console.log("mainPost");
 
@@ -627,7 +622,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ POSTCOMMIT +++++++++++++++
   async function mainPostCommitment() {
     console.log("mainPostCommitment");
 
@@ -650,7 +644,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ CHAT +++++++++++++++
   async function mainChat() {
     console.log("mainChat");
 
@@ -678,7 +671,6 @@ async function main() {
     // });
   }
 
-  // * +++++++++++++++ CHAT MESSAGE +++++++++++++++
   async function mainChatMessage() {
     console.log("mainChatMessage");
 
@@ -717,7 +709,6 @@ async function main() {
     // });
   }
 
-  // TODO: +++++++++++++++ USER STORE +++++++++++++++
   async function mainUserStore() {
     console.log("mainUserStore");
 
@@ -741,7 +732,6 @@ async function main() {
     // });
   }
 
-  // TODO: +++++++++++++++ USER CUSTOMER +++++++++++++++
   async function mainUserCustomer() {
     console.log("mainUserCustomer");
 
@@ -876,7 +866,6 @@ async function main() {
     // });
   }
 
-  // TODO: +++++++++++++++ BENEFIT +++++++++++++++
   async function mainBenefit() {
     console.log("mainBenefit");
 
@@ -933,23 +922,33 @@ async function main() {
     // });
   }
 
+  async function cloudinary() {
+    // await prisma.image.delete({
+    //   where: {
+    //     publicId: "RecyclApp/User/test",
+    //   },
+    // });
+    // handleDelete("RecyclApp/User/test");
+  }
+
   // ! +++++++++++++++ RUN +++++++++++++++
-  await mainUser();
-  await mainAddress();
-  await mainRating();
-  await mainSubscription();
-  await mainAdvertisement();
-  await mainOrganic();
-  await mainMaterialComponent();
-  await mainMaterialProduct();
-  await mainGreenPoint();
-  await mainPost();
-  await mainPostCommitment();
-  await mainChat();
-  await mainChatMessage();
-  await mainUserStore();
-  await mainUserCustomer();
-  await mainBenefit();
+  // await mainUser();
+  // await mainAddress();
+  // await mainRating();
+  // await mainSubscription();
+  // await mainAdvertisement();
+  // await mainOrganic();
+  // await mainMaterialComponent();
+  // await mainMaterialProduct();
+  // await mainGreenPoint();
+  // await mainPost();
+  // await mainPostCommitment();
+  // await mainChat();
+  // await mainChatMessage();
+  // await mainUserStore();
+  // await mainUserCustomer();
+  // await mainBenefit();
+  // await cloudinary();
 
   // ? +++++++++++++++ DISPLAY +++++++++++++++
   async function mainDisplay() {

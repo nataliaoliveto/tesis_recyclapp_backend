@@ -16,7 +16,7 @@ const materialComponentController = {
     try {
       const { id } = req.params;
       const materialComponent = await prisma.materialComponent.findUnique({
-        where: { id: Number(id) },
+        where: { id },
       });
       res.status(200).json(materialComponent);
     } catch (error) {
@@ -42,7 +42,7 @@ const materialComponentController = {
       const { id } = req.params;
       const { body } = req;
       const materialComponent = await prisma.materialComponent.update({
-        where: { id: Number(id) },
+        where: { id },
         data: {
           ...body,
         },
@@ -58,7 +58,7 @@ const materialComponentController = {
     try {
       const { id } = req.params;
       const materialComponent = await prisma.materialComponent.delete({
-        where: { id: Number(id) },
+        where: { id },
       });
 
       res.status(200).json(materialComponent);

@@ -16,7 +16,7 @@ const chatMessageController = {
     try {
       const { id } = req.params;
       const chatMessage = await prisma.chatMessage.findUnique({
-        where: { id: Number(id) },
+        where: { id },
       });
       res.status(200).json(chatMessage);
     } catch (error) {
@@ -42,7 +42,7 @@ const chatMessageController = {
       const { id } = req.params;
       const { body } = req;
       const chatMessage = await prisma.chatMessage.update({
-        where: { id: Number(id) },
+        where: { id },
         data: {
           ...body,
         },
@@ -58,7 +58,7 @@ const chatMessageController = {
     try {
       const { id } = req.params;
       const chatMessage = await prisma.chatMessage.delete({
-        where: { id: Number(id) },
+        where: { id },
       });
 
       res.status(200).json(chatMessage);

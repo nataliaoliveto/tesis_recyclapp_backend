@@ -16,7 +16,7 @@ const greenPointController = {
     try {
       const { id } = req.params;
       const greenPoint = await prisma.greenPoint.findUnique({
-        where: { id: Number(id) },
+        where: { id },
       });
       res.status(200).json(greenPoint);
     } catch (error) {
@@ -42,7 +42,7 @@ const greenPointController = {
       const { id } = req.params;
       const { body } = req;
       const greenPoint = await prisma.greenPoint.update({
-        where: { id: Number(id) },
+        where: { id },
         data: {
           ...body,
         },
@@ -58,7 +58,7 @@ const greenPointController = {
     try {
       const { id } = req.params;
       const greenPoint = await prisma.greenPoint.delete({
-        where: { id: Number(id) },
+        where: { id },
       });
 
       res.status(200).json(greenPoint);

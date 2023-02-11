@@ -16,7 +16,7 @@ const organicController = {
     try {
       const { id } = req.params;
       const organic = await prisma.organic.findUnique({
-        where: { id: Number(id) },
+        where: { id: id },
       });
       res.status(200).json(organic);
     } catch (error) {
@@ -42,7 +42,7 @@ const organicController = {
       const { id } = req.params;
       const { body } = req;
       const organic = await prisma.organic.update({
-        where: { id: Number(id) },
+        where: { id: id },
         data: {
           ...body,
         },
@@ -76,7 +76,7 @@ const organicController = {
     try {
       const { id } = req.params;
       const organic = await prisma.organic.delete({
-        where: { id: Number(id) },
+        where: { id: id },
       });
 
       res.status(200).json(organic);

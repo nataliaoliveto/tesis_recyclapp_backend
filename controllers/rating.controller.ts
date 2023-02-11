@@ -17,7 +17,7 @@ const ratingController = {
     try {
       const rating = await prisma.rating.findUnique({
         where: {
-          id: Number(id),
+          id: id,
         },
       });
       res.status(200).json(rating);
@@ -44,7 +44,7 @@ const ratingController = {
     try {
       const rating = await prisma.rating.update({
         where: {
-          id: Number(id),
+          id: id,
         },
         data: {
           ...body,
@@ -60,7 +60,7 @@ const ratingController = {
     try {
       const rating = await prisma.rating.delete({
         where: {
-          id: Number(id),
+          id: id,
         },
       });
       res.status(200).json(rating);

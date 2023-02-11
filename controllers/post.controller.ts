@@ -16,7 +16,7 @@ const postController = {
     try {
       const { id } = req.params;
       const post = await prisma.post.findUnique({
-        where: { id: Number(id) },
+        where: { id: id },
       });
       res.status(200).json(post);
     } catch (error) {
@@ -42,7 +42,7 @@ const postController = {
       const { id } = req.params;
       const { body } = req;
       const post = await prisma.post.update({
-        where: { id: Number(id) },
+        where: { id: id },
         data: {
           ...body,
         },
@@ -58,7 +58,7 @@ const postController = {
     try {
       const { id } = req.params;
       const post = await prisma.post.delete({
-        where: { id: Number(id) },
+        where: { id: id },
       });
 
       res.status(200).json(post);

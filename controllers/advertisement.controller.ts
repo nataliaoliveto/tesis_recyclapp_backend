@@ -16,7 +16,7 @@ const advertisementController = {
     try {
       const advertisement = await prisma.advertisement.findUnique({
         where: {
-          id: Number(req.params.id),
+          id: req.params.id,
         },
       });
       res.status(200).json(advertisement);
@@ -42,7 +42,7 @@ const advertisementController = {
       const { body } = req;
       const advertisement = await prisma.advertisement.update({
         where: {
-          id: Number(req.params.id),
+          id: req.params.id,
         },
         data: {
           ...body,
@@ -57,7 +57,7 @@ const advertisementController = {
     try {
       const advertisement = await prisma.advertisement.delete({
         where: {
-          id: Number(req.params.id),
+          id: req.params.id,
         },
       });
       res.status(200).json(advertisement);

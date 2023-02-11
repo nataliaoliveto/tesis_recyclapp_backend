@@ -17,7 +17,7 @@ const addressController = {
     try {
       const address = await prisma.address.findUnique({
         where: {
-          id: Number(id),
+          id,
         },
       });
       res.status(200).json(address);
@@ -44,7 +44,7 @@ const addressController = {
     try {
       const address = await prisma.address.update({
         where: {
-          id: Number(id),
+          id,
         },
         data: {
           ...body,
@@ -60,7 +60,7 @@ const addressController = {
     try {
       const address = await prisma.address.delete({
         where: {
-          id: Number(id),
+          id,
         },
       });
       res.status(200).json(address);
