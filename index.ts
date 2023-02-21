@@ -25,8 +25,8 @@ import { handleDelete } from "./utils/cloudinary.config";
 const prisma = new PrismaClient();
 const app = express();
 
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 app.use("/api", userRouter);
 app.use("/api", addressRouter);
 app.use("/api", ratingRouter);
@@ -46,6 +46,8 @@ app.use("*", (req, res) => {
   res.status(404).json({
     message: "Not Found",
   });
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000/");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 });
 
 async function main() {

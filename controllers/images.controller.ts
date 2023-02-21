@@ -29,9 +29,11 @@ const imagesController = {
   async uploadImage(req: Request, res: Response) {
     const b64 = Buffer.from(req.file.buffer).toString("base64");
     let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-    const cldRes = await handleUpload(dataURI);
-
-    console.log("cldRes", cldRes);
+    const cldRes = await handleUpload(dataURI, req.body.publicid);
+    // TODO add new post/advertisement/etc with new image
+    // const fileName = req.file.originalname;
+    // console.log('req', req.body.publicid)
+    // console.log('req.file', req.file)
 
     const body: Prisma.ImageUpsertArgs = {
       where: {
