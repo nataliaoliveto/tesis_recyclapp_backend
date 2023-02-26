@@ -9,7 +9,8 @@ cloudinary.v2.config({
 
 export function handleUpload(
   imageUploaded: string,
-  publicid: string
+  publicid: string,
+  subfolder: string
 ): Promise<cloudinary.UploadApiResponse> {
   return new Promise((resolve, reject) => {
     cloudinary.v2.uploader.upload(
@@ -19,7 +20,7 @@ export function handleUpload(
         height: 300,
         crop: "fill",
         public_id: publicid,
-        folder: "RecyclApp/User",
+        folder: "RecyclApp/" + subfolder,
       },
       (err, res) => {
         if (err) reject(err);

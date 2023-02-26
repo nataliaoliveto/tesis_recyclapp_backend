@@ -20,6 +20,7 @@ model User {
   username            String          @unique @db.Citext
   imageId             String?         @unique
   isArchived          Boolean         @default(false)
+  createDate          DateTime        @default(now()) //allow first two days to add benefits to get benefit-discount or wait for USBOFFmensual. Only valid the first time.
   userType            UserType
   address             Address[]
   Advertisement       Advertisement[]
@@ -56,11 +57,16 @@ model Address {
 
 // * CRUD OK
 model UserStore {
-  id          String    @id @default(cuid())
-  displayName String    @unique @db.Citext
-  userId      String    @unique
-  User        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Benefit     Benefit[]
+  id               String       @id @default(cuid())
+  displayName      String       @unique @db.Citext
+  userId           String       @unique
+  expiryDate       DateTime     @db.Date
+  hasBenefits      Boolean      @default(false)
+  paymentCompleted Boolean      @default(false)
+  subscriptionId   String
+  subscription     Subscription @relation(fields: [subscriptionId], references: [id])
+  User             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Benefit          Benefit[]
 }
 
 // * CRUD OK
@@ -86,18 +92,19 @@ model Rating {
 
 // * CRUD OK
 model Advertisement {
-  id             String       @id @default(cuid())
-  durationStart  DateTime     @db.Date
-  durationEnd    DateTime     @db.Date
-  displayName    String       @db.VarChar(30)
-  text           String       @db.VarChar(255)
-  imageId        String?      @unique
-  userId         String
-  subscriptionId String
-  isArchived     Boolean      @default(false)
-  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
-  user           User         @relation(fields: [userId], references: [id])
-  Image          Image?       @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  id               String       @id @default(cuid())
+  durationStart    DateTime?    @db.Date
+  durationEnd      DateTime?    @db.Date
+  title            String       @db.VarChar(30)
+  text             String       @db.VarChar(255)
+  imageId          String?      @unique
+  userId           String
+  subscriptionId   String
+  paymentCompleted Boolean      @default(false)
+  isArchived       Boolean      @default(false)
+  subscription     Subscription @relation(fields: [subscriptionId], references: [id])
+  user             User         @relation(fields: [userId], references: [id])
+  Image            Image?       @relation(fields: [imageId], references: [id], onDelete: SetNull)
 }
 
 // * CRUD OK
@@ -108,6 +115,19 @@ model Subscription {
   duration       Int
   isArchived     Boolean         @default(false)
   advertisements Advertisement[]
+  userStores     UserStore[]
+}
+
+model Donation {
+  id               String    @id @default(cuid())
+  name             String    @db.VarChar(30)
+  mail             String    @unique @db.Citext
+  displayName      String    @db.VarChar(30)
+  durationStart    DateTime? @db.Date
+  durationEnd      DateTime? @db.Date
+  paymentCompleted Boolean   @default(false)
+  subscriptionId   String
+  isArchived       Boolean   @default(false)
 }
 
 // * CRUD OK

@@ -3,55 +3,55 @@ import type { Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
-const advertisementController = {
-  async getAdvertisements(req: Request, res: Response) {
+const donationController = {
+  async getDonations(req: Request, res: Response) {
     try {
-      const advertisements = await prisma.advertisement.findMany();
-      res.status(200).json(advertisements);
+      const donations = await prisma.donation.findMany();
+      res.status(200).json(donations);
     } catch (error) {
       res.status(500).json(error);
     }
   },
-  async getAdvertisement(req: Request, res: Response) {
+  async getDonation(req: Request, res: Response) {
     try {
-      const advertisement = await prisma.advertisement.findUnique({
+      const donation = await prisma.donation.findUnique({
         where: {
           id: req.params.id,
         },
       });
-      res.status(200).json(advertisement);
+      res.status(200).json(donation);
     } catch (error) {
       res.status(500).json(error);
     }
   },
-  async createAdvertisement(req: Request, res: Response) {
+  async createDonation(req: Request, res: Response) {
     try {
       const { body } = req;
-      const advertisementBody: Prisma.AdvertisementCreateInput = {
-        subscription: {
-          connect: {
-            name: "AD" + body.duration,
-          },
-        },
-        text: body.text,
-        title: body.title,
-        user: {
-          connect: {
-            id: body.userId,
-          },
-        },
-      };
-      const advertisement = await prisma.advertisement.create({
-        data: {
-          ...advertisementBody,
-        },
-      });
-      res.status(201).json(advertisement.id);
+      //   const donationBody: Prisma.DonationCreateInput = {
+      //     subscription: {
+      //       connect: {
+      //         name: "AD" + body.duration,
+      //       },
+      //     },
+      //     text: body.text,
+      //     title: body.title,
+      //     user: {
+      //       connect: {
+      //         id: body.userId,
+      //       },
+      //     },
+      //   };
+      //   const donation = await prisma.donation.create({
+      //     data: {
+      //       ...donationBody,
+      //     },
+      //   });
+      //   res.status(201).json(donation.id);
     } catch (error) {
       res.status(500).json(error);
     }
   },
-  async updateAdvertisement(req: Request, res: Response) {
+  async updateDonation(req: Request, res: Response) {
     //TODO: check if it is required to be available
     try {
       const { body } = req;
@@ -82,7 +82,7 @@ const advertisementController = {
       res.status(500).json(error);
     }
   },
-  async upsertAdvertisement(req: Request, res: Response) {
+  async upsertDonation(req: Request, res: Response) {
     //TODO: check if it is required to be available
     try {
       const { body } = req;
@@ -127,7 +127,7 @@ const advertisementController = {
       res.status(500).json(error);
     }
   },
-  async deleteAdvertisement(req: Request, res: Response) {
+  async deleteDonation(req: Request, res: Response) {
     try {
       const advertisement = await prisma.advertisement.delete({
         where: {
@@ -141,4 +141,4 @@ const advertisementController = {
   },
 };
 
-export default advertisementController;
+export default donationController;

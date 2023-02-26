@@ -12,3 +12,4 @@ export { default as postCommitmentRouter } from "./postCommitment.routes";
 export { default as chatMessageRouter } from "./chatMessage.routes";
 export { default as chatRouter } from "./chat.routes";
 export { default as imageRouter } from "./image.routes";
+export { default as donationRouter } from "./donation.route";

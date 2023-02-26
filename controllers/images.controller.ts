@@ -26,27 +26,27 @@ const imagesController = {
       res.status(500).json(error);
     }
   },
-  async uploadImage(req: Request, res: Response) {
+  async upsertImage(req: Request, res: Response) {
     const b64 = Buffer.from(req.file.buffer).toString("base64");
     let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-    const cldRes = await handleUpload(dataURI, req.body.publicid);
-    // TODO add new post/advertisement/etc with new image
-    // const fileName = req.file.originalname;
-    // console.log('req', req.body.publicid)
-    // console.log('req.file', req.file)
+    const cldRes = await handleUpload(
+      dataURI,
+      req.body.publicid,
+      req.body.subfolder
+    );
 
     const body: Prisma.ImageUpsertArgs = {
       where: {
-        publicId: cldRes.public_id,
+        publicId: cldRes.subfolder + "/" + cldRes.public_id,
       },
       update: {
-        publicId: cldRes.public_id,
+        publicId: cldRes.subfolder + "/" + cldRes.public_id,
         version: cldRes.version + "",
         format: cldRes.format,
         url: cldRes.secure_url,
       },
       create: {
-        publicId: cldRes.public_id,
+        publicId: cldRes.subfolder + "/" + cldRes.public_id,
         version: cldRes.version + "",
         format: cldRes.format,
         url: cldRes.secure_url,
