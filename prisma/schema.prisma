@@ -15,8 +15,8 @@ model User {
   name                String          @db.VarChar(30)
   surname             String          @db.VarChar(30)
   mail                String          @unique @db.Citext
-  phone               String          @db.VarChar(20)
-  password            String          @db.VarChar(20)
+  phone               String          @db.VarChar(13)
+  password            String          @db.VarChar(16)
   username            String          @unique @db.Citext
   imageId             String?         @unique
   isArchived          Boolean         @default(false)

@@ -27,26 +27,32 @@ const userController = {
   },
   async createUser(req: Request, res: Response) {
     const { body } = req;
-    console.log("body", body)
     const { username } = req.body;
-    console.log('username', username)
-    // try {
-      const user = await prisma.user.upsert({ 
-        where: {
-          username: username,
-        },
-        update: {
+
+    try {
+      const user = await prisma.user.create({
+        data: {
           ...body,
         },
-        create: {
-          ...body,
-        }
       });
-      
+
       res.status(201).json(user);
-    // } catch (error) {
-    //   res.status(500).json({ error });
-    // }    
+    } catch (error) {
+      res.status(500).json({ Error: "User already exists" });
+    }
+
+    // try {
+    // const user = await prisma.user.upsert({
+    //   where: {
+    //     username: username,
+    //   },
+    //   update: {
+    //     ...body,
+    //   },
+    //   create: {
+    //     ...body,
+    //   }
+    // });
   },
   async updateUser(req: Request, res: Response) {
     const { body } = req;
