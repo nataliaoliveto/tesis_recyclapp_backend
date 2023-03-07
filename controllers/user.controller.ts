@@ -1,5 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
+import { handlePrismaError } from "../utils/handlePrismaError";
 
 const prisma = new PrismaClient();
 
@@ -37,22 +38,16 @@ const userController = {
       });
 
       res.status(201).json(user);
-    } catch (error) {
-      res.status(500).json({ Error: "User already exists" });
-    }
+    }  catch (e) {      
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
 
-    // try {
-    // const user = await prisma.user.upsert({
-    //   where: {
-    //     username: username,
-    //   },
-    //   update: {
-    //     ...body,
-    //   },
-    //   create: {
-    //     ...body,
-    //   }
-    // });
+        let error = handlePrismaError(e);
+
+        return res.status(error.status).json({ status: 'error', message: error.message });
+      }
+
+      return res.status(500).json({ status: e.status ,message: 'Ocurrió un error. Por favor, vuelve a intentarlo o contacta a soporte.' });
+    }
   },
   async updateUser(req: Request, res: Response) {
     const { body } = req;

@@ -45,8 +45,6 @@ import { handleDelete } from "./utils/cloudinary.config";
 const prisma = new PrismaClient();
 const app = express();
 
-// TODO -> insert, update, upsert, delete methods
-
 app.use(express.json());
 app.use(cors());
 app.use("/api", userRouter);
