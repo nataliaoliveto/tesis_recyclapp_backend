@@ -1,3 +1,8 @@
+import { PrismaClient, Prisma } from "@prisma/client";
+import type { Request, Response } from "express";
+
+const prisma = new PrismaClient();
+
 export async function mainAdvertisement() {
   console.log("mainAdvertisement");
   // await prisma.advertisement.create({
@@ -45,7 +50,7 @@ export async function mainAdvertisement() {
   // });
   // await prisma.advertisement.delete({
   //   where: {
-  //     id: 5,
+  //     id: "clf7a1f1e0000up9g2u248y4y",
   //   },
   // });
 }

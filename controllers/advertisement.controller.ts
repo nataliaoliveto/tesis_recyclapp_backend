@@ -46,7 +46,10 @@ const advertisementController = {
           ...advertisementBody,
         },
       });
-      res.status(201).json(advertisement.id);
+
+      console.log('advertisement', advertisement)
+      
+      res.status(201).json({ advertisementId: advertisement.id });
     } catch (error) {
       res.status(500).json(error);
     }

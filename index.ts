@@ -25,6 +25,7 @@ import {
   mainRating,
   mainSubscription,
   mainAdvertisement,
+  mainImage,
   mainOrganic,
   mainMaterialComponent,
   mainMaterialProduct,
@@ -87,6 +88,7 @@ async function main() {
   // await mainRating();
   // await mainSubscription();
   // await mainAdvertisement();
+  // await mainImage();
   // await mainOrganic();
   // await mainMaterialComponent();
   // await mainMaterialProduct();
@@ -111,3 +113,11 @@ app.get("/", async (req: any, res: any) => {
 });
 
 const server = app.listen(5000, () => console.log("server ready at 5000"));
+
+
+
+// TODO: error handler
+// code: 'P2025',
+// clientVersion: '4.10.1',
+// meta: { cause: 'Record to delete does not exist.' },
+// batchRequestIdx: undefined

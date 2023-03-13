@@ -18,7 +18,6 @@ model User {
   phone               String          @db.VarChar(13)
   password            String          @db.VarChar(16)
   username            String          @unique @db.Citext
-  imageId             String?         @unique
   isArchived          Boolean         @default(false)
   createDate          DateTime        @default(now()) //allow first two days to add benefits to get benefit-discount or wait for USBOFFmensual. Only valid the first time.
   userType            UserType
@@ -30,7 +29,7 @@ model User {
   Rating              Rating?
   UserStore           UserStore?
   UserCustomer        UserCustomer?
-  Image               Image?          @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  Image               Image?
 }
 
 // * ENUM OK
@@ -97,14 +96,13 @@ model Advertisement {
   durationEnd      DateTime?    @db.Date
   title            String       @db.VarChar(30)
   text             String       @db.VarChar(255)
-  imageId          String?      @unique
   userId           String
   subscriptionId   String
   paymentCompleted Boolean      @default(false)
   isArchived       Boolean      @default(false)
   subscription     Subscription @relation(fields: [subscriptionId], references: [id])
   user             User         @relation(fields: [userId], references: [id])
-  Image            Image?       @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  Image            Image?
 }
 
 // * CRUD OK
@@ -172,21 +170,19 @@ model GreenPoint {
 model Organic {
   id            String  @id @default(cuid())
   name          String  @unique @db.Citext
-  imageId       String? @unique
   isCompostable Boolean
   isArchived    Boolean @default(false)
-  Image         Image?  @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  Image         Image?
 }
 
 // * CRUD OK
 model MaterialProduct {
   id                String              @id @default(cuid())
   name              String              @unique @db.Citext
-  imageId           String?             @unique
   isArchived        Boolean             @default(false)
-  Image             Image?              @relation(fields: [imageId], references: [id], onDelete: SetNull)
   materialComponent MaterialComponent[] @relation("MaterialProductToMaterialComponent")
   Post              Post[]
+  Image             Image?
 }
 
 // * CRUD OK
@@ -195,11 +191,10 @@ model MaterialComponent {
   name            String            @unique @db.Citext
   recyclableType  RecyclableType
   description     String            @db.VarChar(1024)
-  imageId         String?           @unique
   isArchived      Boolean           @default(false)
-  Image           Image?            @relation(fields: [imageId], references: [id], onDelete: SetNull)
   GreenPoint      GreenPoint[]      @relation("GreenPointToMaterialComponent")
   MaterialProduct MaterialProduct[] @relation("MaterialProductToMaterialComponent")
+  Image           Image?
 }
 
 // TODO: EVALUATE RANGE OF TYPES - WHAT DOES EACH ONE REPRESENT?
@@ -221,15 +216,14 @@ model Post {
   pointsAwared      Int
   userId            String
   materialProductId String
-  imageId           String?          @unique
   isActive          Boolean          @default(true)
   isReserved        Boolean          @default(false)
   isArchived        Boolean          @default(false)
-  Image             Image?           @relation(fields: [imageId], references: [id], onDelete: SetNull)
   Chat              Chat[]
   materialProduct   MaterialProduct  @relation(fields: [materialProductId], references: [id])
   userPost          User             @relation(fields: [userId], references: [id])
   PostCommitment    PostCommitment[]
+  Image             Image?
 }
 
 // * ENUM OK
@@ -275,15 +269,21 @@ model ChatMessage {
 }
 
 model Image {
-  id                String             @id @default(cuid())
-  publicId          String             @unique
-  format            String
-  version           String
-  url               String
-  User              User?
-  Advertisement     Advertisement?
-  Organic           Organic?
-  MaterialProduct   MaterialProduct?
-  MaterialComponent MaterialComponent?
-  Post              Post?
+  id                  String             @id @default(cuid())
+  publicId            String             @unique
+  format              String
+  version             String
+  url                 String
+  userId              String?            @unique
+  advertisementId     String?            @unique
+  organicId           String?            @unique
+  materialProductId   String?            @unique
+  materialComponentId String?            @unique
+  postId              String?            @unique
+  User                User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Advertisement       Advertisement?     @relation(fields: [advertisementId], references: [id], onDelete: Cascade)
+  Organic             Organic?           @relation(fields: [organicId], references: [id], onDelete: Cascade)
+  MaterialProduct     MaterialProduct?   @relation(fields: [materialProductId], references: [id], onDelete: Cascade)
+  MaterialComponent   MaterialComponent? @relation(fields: [materialComponentId], references: [id], onDelete: Cascade)
+  Post                Post?              @relation(fields: [postId], references: [id], onDelete: Cascade)
 }

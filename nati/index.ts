@@ -14,3 +14,4 @@ export * from "./test.rating";
 export * from "./test.subscription";
 export * from "./test.user";
 export * from "./test.userStore";
+export * from "./test.image";
