@@ -17,6 +17,7 @@ import {
   chatRouter,
   imageRouter,
   donationRouter,
+  benefitRouter,
 } from "./routes";
 
 import {
@@ -63,6 +64,7 @@ app.use("/api", chatMessageRouter);
 app.use("/api", chatRouter);
 app.use("/api", imageRouter);
 app.use("/api", donationRouter);
+app.use("/api", benefitRouter);
 
 app.use("*", (req, res) => {
   res.status(404).json({
@@ -101,6 +103,7 @@ async function main() {
   // await mainUserCustomer();
   // await mainBenefit();
   // await cloudinary();
+  await mainBenefit();
 
   // ! +++++++++++++++ RUN +++++++++++++++
   await mainDisplay();
