@@ -2,7 +2,6 @@ import { PrismaClient, Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
 import { handleUpload } from "../utils/cloudinary.config";
 
-
 const prisma = new PrismaClient();
 
 const imagesController = {
@@ -15,11 +14,12 @@ const imagesController = {
     }
   },
   async getImage(req: Request, res: Response) {
-    const { publicId } = req.params;
+    const { id } = req.params;
+    console.log("publicId", id);
     try {
       const address = await prisma.image.findUnique({
         where: {
-          publicId,
+          id,
         },
       });
       res.status(200).json(address);
@@ -33,27 +33,25 @@ const imagesController = {
     const fkType = req.body.subfolder;
     const fkValue = req.body.publicid;
     const fkTypeInput = fkType.toLowerCase() + "Id";
-    console.log("value", fkValue)
-    console.log("id",fkTypeInput)
-    const cldRes = await handleUpload(
-      dataURI,
-      fkValue,
-      fkType
-    );
+    console.log("value", fkValue);
+    console.log("id", fkTypeInput);
+    const cldRes = await handleUpload(dataURI, fkValue, fkType);
 
     const body: Prisma.ImageUpsertArgs = {
       where: {
         publicId: cldRes.public_id,
-        
       },
       update: {
         publicId: cldRes.public_id,
         version: cldRes.version + "",
         format: cldRes.format,
         url: cldRes.secure_url,
-        advertisementId: fkTypeInput === "advertisementId" ? fkValue : undefined,
-        materialComponentId: fkTypeInput === "materialComponentId" ? fkValue : undefined,
-        materialProductId: fkTypeInput === "materialProductId" ? fkValue : undefined,
+        advertisementId:
+          fkTypeInput === "advertisementId" ? fkValue : undefined,
+        materialComponentId:
+          fkTypeInput === "materialComponentId" ? fkValue : undefined,
+        materialProductId:
+          fkTypeInput === "materialProductId" ? fkValue : undefined,
         organicId: fkTypeInput === "organicId" ? fkValue : undefined,
         postId: fkTypeInput === "postId" ? fkValue : undefined,
         userId: fkTypeInput === "userId" ? fkValue : undefined,
@@ -63,13 +61,16 @@ const imagesController = {
         version: cldRes.version + "",
         format: cldRes.format,
         url: cldRes.secure_url,
-        advertisementId: fkTypeInput === "advertisementId" ? fkValue : undefined,
-        materialComponentId: fkTypeInput === "materialComponentId" ? fkValue : undefined,
-        materialProductId: fkTypeInput === "materialProductId" ? fkValue : undefined,
+        advertisementId:
+          fkTypeInput === "advertisementId" ? fkValue : undefined,
+        materialComponentId:
+          fkTypeInput === "materialComponentId" ? fkValue : undefined,
+        materialProductId:
+          fkTypeInput === "materialProductId" ? fkValue : undefined,
         organicId: fkTypeInput === "organicId" ? fkValue : undefined,
         postId: fkTypeInput === "postId" ? fkValue : undefined,
         userId: fkTypeInput === "userId" ? fkValue : undefined,
-      },   
+      },
     };
 
     try {

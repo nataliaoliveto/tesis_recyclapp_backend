@@ -37,7 +37,7 @@ import {
   mainUserStore,
   mainBenefit,
   cloudinary,
-} from "./nati";
+} from "./test";
 
 import { PrismaClient, Prisma } from "@prisma/client";
 import imagesController from "./controllers/images.controller";
@@ -113,8 +113,6 @@ app.get("/", async (req: any, res: any) => {
 });
 
 const server = app.listen(5000, () => console.log("server ready at 5000"));
-
-
 
 // TODO: error handler
 // code: 'P2025',
