@@ -6,7 +6,13 @@ const prisma = new PrismaClient();
 const benefitController = {
   async getBenefits(req: Request, res: Response) {
     try {
-      const benefits = await prisma.benefit.findMany();
+      const benefits = await prisma.benefit.findMany({
+        where: {
+          isArchived: false,
+          isActive: true,
+        },
+      });
+
       res.status(200).json(benefits);
     } catch (error) {
       res.status(500).json(error);
@@ -39,10 +45,12 @@ const benefitController = {
   },
   async updateBenefit(req: Request, res: Response) {
     const { body } = req;
+    const { id } = req.params;
+    console.log("req", body, id);
     try {
       const benefit = await prisma.benefit.update({
         where: {
-          id: req.params.id,
+          id: id,
         },
         data: {
           ...body,
@@ -50,9 +58,11 @@ const benefitController = {
       });
       res.status(200).json(benefit);
     } catch (error) {
+      console.log("error", error);
       res.status(500).json(error);
     }
   },
+
   async deleteBenefit(req: Request, res: Response) {
     try {
       const benefit = await prisma.benefit.delete({
