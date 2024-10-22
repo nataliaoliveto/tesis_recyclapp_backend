@@ -16,7 +16,7 @@ model User {
   surname             String          @db.VarChar(30)
   mail                String          @unique @db.Citext
   phone               String          @db.VarChar(13)
-  password            String          @db.VarChar(16)
+  password            String          @db.VarChar(255)
   username            String          @unique @db.Citext
   isArchived          Boolean         @default(false)
   createDate          DateTime        @default(now()) //allow first two days to add benefits to get benefit-discount or wait for USBOFFmensual. Only valid the first time.

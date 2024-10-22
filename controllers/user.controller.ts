@@ -7,7 +7,12 @@ const prisma = new PrismaClient();
 const userController = {
   async getUsers(req: Request, res: Response) {
     try {
-      const users = await prisma.user.findMany();
+      const users = await prisma.user.findMany({
+        include: {
+          UserCustomer: true,
+          UserStore: true,
+        },
+      });
       res.status(200).json(users);
     } catch (error) {
       res.status(500).json({ error });
@@ -19,6 +24,10 @@ const userController = {
       const user = await prisma.user.findUnique({
         where: {
           id: id,
+        },
+        include: {
+          UserCustomer: true,
+          UserStore: true,
         },
       });
       res.status(200).json(user);
@@ -38,27 +47,45 @@ const userController = {
       });
 
       res.status(201).json(user);
-    }  catch (e) {      
+    } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
-
         let error = handlePrismaError(e);
 
-        return res.status(error.status).json({ status: 'error', message: error.message });
+        return res
+          .status(error.status)
+          .json({ status: "error", message: error.message });
       }
 
-      return res.status(500).json({ status: e.status ,message: 'Ocurrió un error. Por favor, vuelve a intentarlo o contacta a soporte.' });
+      return res.status(500).json({
+        status: e.status,
+        message:
+          "Ocurrió un error. Por favor, vuelve a intentarlo o contacta a soporte.",
+      });
     }
   },
   async updateUser(req: Request, res: Response) {
     const { body } = req;
     const { id } = req.params;
+
+    const { userData, userStoreData } = body;
+
     try {
       const user = await prisma.user.update({
         where: {
           id: id,
         },
         data: {
-          ...body,
+          ...userData,
+          UserStore: userStoreData
+            ? {
+                update: {
+                  ...userStoreData,
+                },
+              }
+            : undefined,
+        },
+        include: {
+          UserStore: true,
         },
       });
       res.status(200).json(user);

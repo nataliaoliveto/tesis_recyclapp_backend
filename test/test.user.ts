@@ -1,5 +1,6 @@
 export async function mainUser() {
   console.log("mainUser");
+
   // await prisma.user.deleteMany();
   // await prisma.user.delete({
   //   where: {

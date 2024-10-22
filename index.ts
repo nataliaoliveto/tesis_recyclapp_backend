@@ -81,6 +81,11 @@ async function mainDisplay() {
   console.log("mainDisplay");
   const arrayFindMany = await prisma.userStore.findMany({});
   console.log("arrayFindMany", JSON.stringify(arrayFindMany, null, 2));
+  // const arrayFindManyUsers = await prisma.user.findMany({});
+  // console.log(
+  //   "arrayFindManyUsers",
+  //   JSON.stringify(arrayFindManyUsers, null, 1)
+  // );
 }
 
 async function main() {
