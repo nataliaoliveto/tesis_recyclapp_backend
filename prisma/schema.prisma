@@ -6,10 +6,9 @@ generator client {
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
-  extensions = [citext(map: "citext")]
+  extensions = [citext]
 }
 
-// * CRUD OK
 model User {
   id                  String          @id @default(cuid())
   name                String          @db.VarChar(30)
@@ -19,56 +18,48 @@ model User {
   password            String          @db.VarChar(255)
   username            String          @unique @db.Citext
   isArchived          Boolean         @default(false)
-  createDate          DateTime        @default(now()) //allow first two days to add benefits to get benefit-discount or wait for USBOFFmensual. Only valid the first time.
   userType            UserType
+  createDate          DateTime        @default(now())
   address             Address[]
   Advertisement       Advertisement[]
   ChatMessageReceived ChatMessage[]   @relation("chatReceiver")
   ChatMessageSent     ChatMessage[]   @relation("chatSender")
+  Image               Image?
   Post                Post[]
   Rating              Rating?
-  UserStore           UserStore?
   UserCustomer        UserCustomer?
-  Image               Image?
+  UserStore           UserStore?
 }
 
-// * ENUM OK
-enum UserType {
-  CUSTOMER
-  STORE
-}
-
-// * CRUD OK
 model Address {
   id           String      @id @default(cuid())
-  street       String      @db.VarChar(50) //calle y numero
-  flat         String      @db.VarChar(10) //dpto?
-  city         String      @db.VarChar(50) //barrio/localidad
-  state        String      @db.VarChar(50) //provincia/CABA
-  latitude     Float
-  longitude    Float
+  street       String      @db.VarChar(50)
+  flat         String?     @db.VarChar(10)
+  city         String      @db.VarChar(50)
+  state        String      @db.VarChar(50)
+  latitude     Float?
+  longitude    Float?
   greenPointId String?     @unique
   userId       String?
   isArchived   Boolean     @default(false)
+  postalCode   String      @db.VarChar(4)
   GreenPoint   GreenPoint? @relation(fields: [greenPointId], references: [id])
   User         User?       @relation(fields: [userId], references: [id])
 }
 
-// * CRUD OK
 model UserStore {
   id               String       @id @default(cuid())
   displayName      String       @unique @db.Citext
   userId           String       @unique
   expiryDate       DateTime     @db.Date
   hasBenefits      Boolean      @default(false)
-  paymentCompleted Boolean      @default(false)
   subscriptionId   String
+  paymentCompleted Boolean      @default(false)
+  Benefit          Benefit[]
   subscription     Subscription @relation(fields: [subscriptionId], references: [id])
   User             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Benefit          Benefit[]
 }
 
-// * CRUD OK
 model UserCustomer {
   id              String    @id @default(cuid())
   pointsCurrent   Int       @default(0)
@@ -79,7 +70,6 @@ model UserCustomer {
   benefitsHistory Benefit[] @relation("benefitsHistory")
 }
 
-// * CRUD OK
 model Rating {
   id         String  @id @default(cuid())
   text       String  @db.VarChar(255)
@@ -89,23 +79,21 @@ model Rating {
   user       User    @relation(fields: [userId], references: [id])
 }
 
-// * CRUD OK
 model Advertisement {
   id               String       @id @default(cuid())
   durationStart    DateTime?    @db.Date
   durationEnd      DateTime?    @db.Date
-  title            String       @db.VarChar(30)
   text             String       @db.VarChar(255)
   userId           String
   subscriptionId   String
-  paymentCompleted Boolean      @default(false)
   isArchived       Boolean      @default(false)
+  paymentCompleted Boolean      @default(false)
+  title            String       @db.VarChar(30)
   subscription     Subscription @relation(fields: [subscriptionId], references: [id])
   user             User         @relation(fields: [userId], references: [id])
   Image            Image?
 }
 
-// * CRUD OK
 model Subscription {
   id             String          @id @default(cuid())
   name           String          @unique @db.Citext
@@ -123,12 +111,11 @@ model Donation {
   displayName      String    @db.VarChar(30)
   durationStart    DateTime? @db.Date
   durationEnd      DateTime? @db.Date
+  isArchived       Boolean   @default(false)
   paymentCompleted Boolean   @default(false)
   subscriptionId   String
-  isArchived       Boolean   @default(false)
 }
 
-// * CRUD OK
 model Benefit {
   id                  String         @id @default(cuid())
   name                String         @db.VarChar(20)
@@ -144,15 +131,6 @@ model Benefit {
   userCustomerHistory UserCustomer[] @relation("benefitsHistory")
 }
 
-// TODO: EVALUATE RANGE OF TYPES - WHAT DOES EACH ONE REPRESENT?
-// * ENUM OK
-enum BenefitType {
-  DISCOUNT
-  PRODUCT
-  DOUBLEPRODUCT
-}
-
-// * CRUD OK
 model GreenPoint {
   id                String              @id @default(cuid())
   idpv              String              @unique @db.Citext
@@ -166,7 +144,6 @@ model GreenPoint {
   materialComponent MaterialComponent[] @relation("GreenPointToMaterialComponent")
 }
 
-// * CRUD OK
 model Organic {
   id            String  @id @default(cuid())
   name          String  @unique @db.Citext
@@ -175,38 +152,26 @@ model Organic {
   Image         Image?
 }
 
-// * CRUD OK
 model MaterialProduct {
   id                String              @id @default(cuid())
   name              String              @unique @db.Citext
   isArchived        Boolean             @default(false)
-  materialComponent MaterialComponent[] @relation("MaterialProductToMaterialComponent")
-  Post              Post[]
   Image             Image?
+  Post              Post[]
+  materialComponent MaterialComponent[] @relation("MaterialProductToMaterialComponent")
 }
 
-// * CRUD OK
 model MaterialComponent {
   id              String            @id @default(cuid())
   name            String            @unique @db.Citext
   recyclableType  RecyclableType
   description     String            @db.VarChar(1024)
   isArchived      Boolean           @default(false)
+  Image           Image?
   GreenPoint      GreenPoint[]      @relation("GreenPointToMaterialComponent")
   MaterialProduct MaterialProduct[] @relation("MaterialProductToMaterialComponent")
-  Image           Image?
 }
 
-// TODO: EVALUATE RANGE OF TYPES - WHAT DOES EACH ONE REPRESENT?
-// * ENUM OK
-enum RecyclableType {
-  RECYCLABLE
-  NO_RECYCLABLE
-  DEPENDS
-  ORGANIC
-}
-
-// * CRUD OK
 model Post {
   id                String           @id @default(cuid())
   postNumber        Int              @unique @db.SmallInt
@@ -220,19 +185,12 @@ model Post {
   isReserved        Boolean          @default(false)
   isArchived        Boolean          @default(false)
   Chat              Chat[]
+  Image             Image?
   materialProduct   MaterialProduct  @relation(fields: [materialProductId], references: [id])
   userPost          User             @relation(fields: [userId], references: [id])
   PostCommitment    PostCommitment[]
-  Image             Image?
 }
 
-// * ENUM OK
-enum PostPurpouse {
-  HAVE
-  WANT
-}
-
-// * CRUD OK
 model PostCommitment {
   id         String  @id @default(cuid())
   postId     String
@@ -242,7 +200,6 @@ model PostCommitment {
   post       Post    @relation(fields: [postId], references: [id])
 }
 
-// * CRUD OK
 model Chat {
   id          String        @id @default(cuid())
   postId      String
@@ -254,7 +211,6 @@ model Chat {
   ChatMessage ChatMessage[]
 }
 
-// * CRUD OK
 model ChatMessage {
   id         String   @id @default(cuid())
   timestamp  DateTime @default(now())
@@ -274,16 +230,39 @@ model Image {
   format              String
   version             String
   url                 String
-  userId              String?            @unique
   advertisementId     String?            @unique
-  organicId           String?            @unique
-  materialProductId   String?            @unique
   materialComponentId String?            @unique
+  materialProductId   String?            @unique
+  organicId           String?            @unique
   postId              String?            @unique
-  User                User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String?            @unique
   Advertisement       Advertisement?     @relation(fields: [advertisementId], references: [id], onDelete: Cascade)
-  Organic             Organic?           @relation(fields: [organicId], references: [id], onDelete: Cascade)
-  MaterialProduct     MaterialProduct?   @relation(fields: [materialProductId], references: [id], onDelete: Cascade)
   MaterialComponent   MaterialComponent? @relation(fields: [materialComponentId], references: [id], onDelete: Cascade)
+  MaterialProduct     MaterialProduct?   @relation(fields: [materialProductId], references: [id], onDelete: Cascade)
+  Organic             Organic?           @relation(fields: [organicId], references: [id], onDelete: Cascade)
   Post                Post?              @relation(fields: [postId], references: [id], onDelete: Cascade)
+  User                User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum UserType {
+  CUSTOMER
+  STORE
+}
+
+enum BenefitType {
+  DISCOUNT
+  PRODUCT
+  DOUBLEPRODUCT
+}
+
+enum RecyclableType {
+  RECYCLABLE
+  NO_RECYCLABLE
+  DEPENDS
+  ORGANIC
+}
+
+enum PostPurpouse {
+  HAVE
+  WANT
 }

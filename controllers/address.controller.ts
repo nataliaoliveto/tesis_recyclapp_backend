@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 const addressController = {
   async getAddresses(req: Request, res: Response) {
     try {
-      const addresses = await prisma.address.findMany();
+      const addresses = await prisma.address.findMany({
+        where: {
+          isArchived: false,
+        },
+      });
       res.status(200).json(addresses);
     } catch (error) {
       res.status(500).json(error);
@@ -35,12 +39,14 @@ const addressController = {
       });
       res.status(200).json(address);
     } catch (error) {
+      console.log("error", error);
       res.status(500).json(error);
     }
   },
   async updateAddress(req: Request, res: Response) {
     const { id } = req.params;
     const { body } = req;
+    console.log("req", body, id);
     try {
       const address = await prisma.address.update({
         where: {
@@ -52,6 +58,7 @@ const addressController = {
       });
       res.status(200).json(address);
     } catch (error) {
+      console.log("error", error);
       res.status(500).json(error);
     }
   },
@@ -65,6 +72,7 @@ const addressController = {
       });
       res.status(200).json(address);
     } catch (error) {
+      console.log("error", error);
       res.status(500).json(error);
     }
   },

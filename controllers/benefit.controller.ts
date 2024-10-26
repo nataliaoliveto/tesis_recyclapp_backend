@@ -46,7 +46,6 @@ const benefitController = {
   async updateBenefit(req: Request, res: Response) {
     const { body } = req;
     const { id } = req.params;
-    console.log("req", body, id);
     try {
       const benefit = await prisma.benefit.update({
         where: {
@@ -58,7 +57,6 @@ const benefitController = {
       });
       res.status(200).json(benefit);
     } catch (error) {
-      console.log("error", error);
       res.status(500).json(error);
     }
   },
