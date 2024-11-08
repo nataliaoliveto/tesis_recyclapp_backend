@@ -67,14 +67,15 @@ app.use("/api", donationRouter);
 app.use("/api", benefitRouter);
 
 app.use("*", (req, res) => {
-  res.status(404).json({
-    message: "Not Found",
-  });
-  // res.header("Access-Control-Allow-Origin", "http://localhost:3000/");
+  res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
+  res.status(404).json({
+    message: "Not Found",
+  });
+  // res.header("Access-Control-Allow-Origin", "http://localhost:3000/");
 });
 
 async function mainDisplay() {
