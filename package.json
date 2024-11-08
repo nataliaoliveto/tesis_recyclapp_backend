@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "start": "npx nodemon index.ts",
+    "start": "npx tsx index.ts",
     "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
