@@ -118,7 +118,7 @@ model Donation {
 
 model Benefit {
   id                  String         @id @default(cuid())
-  name                String         @db.VarChar(20)
+  name                String         @db.VarChar(50)
   type                BenefitType
   endDate             DateTime       @db.Date
   quantity            Int
