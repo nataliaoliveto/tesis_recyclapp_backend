@@ -74,6 +74,47 @@ const benefitController = {
       res.status(500).json(error);
     }
   },
+
+  async addBenefitUserActive(req: Request, res: Response) {
+    try {
+      const { idUser } = req.body;
+      const { id } = req.params;
+      const benefit = await prisma.benefit.update({
+        where: {
+          id: id,
+        },
+        data: {
+          userCustomerActive: {
+            connect: { id: idUser },
+          },
+        },
+      });
+      res.status(200).json(benefit);
+    } catch (error) {
+      res.status(404).json(error);
+      res.status(500).json(error);
+    }
+  },
+
+  async removeBenefitUserActive(req: Request, res: Response) {
+    try {
+      const { idUser } = req.body;
+      const { id } = req.params;
+      const benefit = await prisma.benefit.update({
+        where: {
+          id: id,
+        },
+        data: {
+          userCustomerActive: {
+            disconnect: { id: idUser },
+          },
+        },
+      });
+      res.status(200).json(benefit);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
 };
 
 export default benefitController;
