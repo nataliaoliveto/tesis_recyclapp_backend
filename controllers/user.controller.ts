@@ -67,7 +67,7 @@ const userController = {
     const { body } = req;
     const { id } = req.params;
 
-    const { userData, userStoreData } = body;
+    const { userData, userStoreData, userCustomerData } = body;
 
     try {
       const user = await prisma.user.update({
@@ -83,9 +83,17 @@ const userController = {
                 },
               }
             : undefined,
+          UserCustomer: userCustomerData
+            ? {
+                update: {
+                  ...userCustomerData,
+                },
+              }
+            : undefined,
         },
         include: {
           UserStore: true,
+          UserCustomer: true,
         },
       });
       res.status(200).json(user);
