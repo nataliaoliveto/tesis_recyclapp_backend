@@ -24,7 +24,6 @@ model User {
   Advertisement       Advertisement[]
   ChatMessageReceived ChatMessage[]   @relation("chatReceiver")
   ChatMessageSent     ChatMessage[]   @relation("chatSender")
-  Image               Image?
   Post                Post[]
   Rating              Rating?
   UserCustomer        UserCustomer?
@@ -61,13 +60,12 @@ model UserStore {
 }
 
 model UserCustomer {
-  id              String    @id @default(cuid())
-  pointsCurrent   Int       @default(0)
-  pointsTotal     Int       @default(0)
-  userId          String    @unique
-  User            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  benefitsActive  Benefit[] @relation("benefitsActive")
-  benefitsHistory Benefit[] @relation("benefitsHistory")
+  id                String              @id @default(cuid())
+  pointsCurrent     Int                 @default(0)
+  pointsTotal       Int                 @default(0)
+  userId            String              @unique
+  User              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  BenefitAssignment BenefitAssignment[]
 }
 
 model Rating {
@@ -91,7 +89,6 @@ model Advertisement {
   title            String       @db.VarChar(30)
   subscription     Subscription @relation(fields: [subscriptionId], references: [id])
   user             User         @relation(fields: [userId], references: [id])
-  Image            Image?
 }
 
 model Subscription {
@@ -117,18 +114,17 @@ model Donation {
 }
 
 model Benefit {
-  id                  String         @id @default(cuid())
-  name                String         @db.VarChar(50)
-  type                BenefitType
-  endDate             DateTime       @db.Date
-  quantity            Int
-  pointsCost          Int
-  userStoreId         String
-  isActive            Boolean        @default(true)
-  isArchived          Boolean        @default(false)
-  userStore           UserStore      @relation(fields: [userStoreId], references: [id])
-  userCustomerActive  UserCustomer[] @relation("benefitsActive")
-  userCustomerHistory UserCustomer[] @relation("benefitsHistory")
+  id                 String              @id @default(cuid())
+  name               String              @db.VarChar(50)
+  type               BenefitType
+  endDate            DateTime            @db.Date
+  quantity           Int
+  pointsCost         Int
+  userStoreId        String
+  isActive           Boolean             @default(true)
+  isArchived         Boolean             @default(false)
+  userStore          UserStore           @relation(fields: [userStoreId], references: [id])
+  benefitAssignments BenefitAssignment[]
 }
 
 model GreenPoint {
@@ -149,14 +145,12 @@ model Organic {
   name          String  @unique @db.Citext
   isCompostable Boolean
   isArchived    Boolean @default(false)
-  Image         Image?
 }
 
 model MaterialProduct {
   id                String              @id @default(cuid())
   name              String              @unique @db.Citext
   isArchived        Boolean             @default(false)
-  Image             Image?
   Post              Post[]
   materialComponent MaterialComponent[] @relation("MaterialProductToMaterialComponent")
 }
@@ -167,7 +161,6 @@ model MaterialComponent {
   recyclableType  RecyclableType
   description     String            @db.VarChar(1024)
   isArchived      Boolean           @default(false)
-  Image           Image?
   GreenPoint      GreenPoint[]      @relation("GreenPointToMaterialComponent")
   MaterialProduct MaterialProduct[] @relation("MaterialProductToMaterialComponent")
 }
@@ -185,7 +178,6 @@ model Post {
   isReserved        Boolean          @default(false)
   isArchived        Boolean          @default(false)
   Chat              Chat[]
-  Image             Image?
   materialProduct   MaterialProduct  @relation(fields: [materialProductId], references: [id])
   userPost          User             @relation(fields: [userId], references: [id])
   PostCommitment    PostCommitment[]
@@ -224,24 +216,14 @@ model ChatMessage {
   sender     User     @relation("chatSender", fields: [senderId], references: [id])
 }
 
-model Image {
-  id                  String             @id @default(cuid())
-  publicId            String             @unique
-  format              String
-  version             String
-  url                 String
-  advertisementId     String?            @unique
-  materialComponentId String?            @unique
-  materialProductId   String?            @unique
-  organicId           String?            @unique
-  postId              String?            @unique
-  userId              String?            @unique
-  Advertisement       Advertisement?     @relation(fields: [advertisementId], references: [id], onDelete: Cascade)
-  MaterialComponent   MaterialComponent? @relation(fields: [materialComponentId], references: [id], onDelete: Cascade)
-  MaterialProduct     MaterialProduct?   @relation(fields: [materialProductId], references: [id], onDelete: Cascade)
-  Organic             Organic?           @relation(fields: [organicId], references: [id], onDelete: Cascade)
-  Post                Post?              @relation(fields: [postId], references: [id], onDelete: Cascade)
-  User                User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+model BenefitAssignment {
+  id             String       @id @default(cuid())
+  benefitId      String
+  userCustomerId String
+  generatedCode  String
+  isActive       Boolean      @default(true)
+  benefit        Benefit      @relation(fields: [benefitId], references: [id])
+  userCustomer   UserCustomer @relation(fields: [userCustomerId], references: [id])
 }
 
 enum UserType {

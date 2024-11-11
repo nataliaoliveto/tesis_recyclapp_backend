@@ -15,7 +15,6 @@ import {
   postCommitmentRouter,
   chatMessageRouter,
   chatRouter,
-  imageRouter,
   donationRouter,
   benefitRouter,
 } from "./routes";
@@ -26,7 +25,6 @@ import {
   mainRating,
   mainSubscription,
   mainAdvertisement,
-  mainImage,
   mainOrganic,
   mainMaterialComponent,
   mainMaterialProduct,
@@ -37,12 +35,9 @@ import {
   mainChatMessage,
   mainUserStore,
   mainBenefit,
-  cloudinary,
 } from "./test";
 
 import { PrismaClient, Prisma } from "@prisma/client";
-import imagesController from "./controllers/images.controller";
-import { handleDelete } from "./utils/cloudinary.config";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -62,7 +57,6 @@ app.use("/api", postRouter);
 app.use("/api", postCommitmentRouter);
 app.use("/api", chatMessageRouter);
 app.use("/api", chatRouter);
-app.use("/api", imageRouter);
 app.use("/api", donationRouter);
 app.use("/api", benefitRouter);
 
@@ -96,7 +90,6 @@ async function main() {
   // await mainRating();
   // await mainSubscription();
   // await mainAdvertisement();
-  // await mainImage();
   // await mainOrganic();
   // await mainMaterialComponent();
   // await mainMaterialProduct();
@@ -108,7 +101,6 @@ async function main() {
   // await mainUserStore();
   // await mainUserCustomer();
   // await mainBenefit();
-  // await cloudinary();
   // await mainBenefit();
 
   // ! +++++++++++++++ RUN +++++++++++++++

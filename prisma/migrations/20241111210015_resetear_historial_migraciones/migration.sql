@@ -19,12 +19,13 @@ CREATE TABLE "User" (
     "name" VARCHAR(30) NOT NULL,
     "surname" VARCHAR(30) NOT NULL,
     "mail" CITEXT NOT NULL,
-    "phone" VARCHAR(20) NOT NULL,
-    "password" VARCHAR(20) NOT NULL,
+    "phone" VARCHAR(13) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
     "username" CITEXT NOT NULL,
-    "imageId" TEXT,
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
     "userType" "UserType" NOT NULL,
+    "createDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "image" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -33,14 +34,15 @@ CREATE TABLE "User" (
 CREATE TABLE "Address" (
     "id" TEXT NOT NULL,
     "street" VARCHAR(50) NOT NULL,
-    "flat" VARCHAR(10) NOT NULL,
+    "flat" VARCHAR(10),
     "city" VARCHAR(50) NOT NULL,
     "state" VARCHAR(50) NOT NULL,
-    "latitude" DOUBLE PRECISION NOT NULL,
-    "longitude" DOUBLE PRECISION NOT NULL,
+    "latitude" DOUBLE PRECISION,
+    "longitude" DOUBLE PRECISION,
     "greenPointId" TEXT,
     "userId" TEXT,
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
+    "postalCode" VARCHAR(4) NOT NULL,
 
     CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
 );
@@ -50,6 +52,10 @@ CREATE TABLE "UserStore" (
     "id" TEXT NOT NULL,
     "displayName" CITEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "expiryDate" DATE NOT NULL,
+    "hasBenefits" BOOLEAN NOT NULL DEFAULT false,
+    "subscriptionId" TEXT NOT NULL,
+    "paymentCompleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "UserStore_pkey" PRIMARY KEY ("id")
 );
@@ -78,14 +84,15 @@ CREATE TABLE "Rating" (
 -- CreateTable
 CREATE TABLE "Advertisement" (
     "id" TEXT NOT NULL,
-    "durationStart" DATE NOT NULL,
-    "durationEnd" DATE NOT NULL,
-    "displayName" VARCHAR(30) NOT NULL,
+    "durationStart" DATE,
+    "durationEnd" DATE,
     "text" VARCHAR(255) NOT NULL,
-    "imageId" TEXT,
     "userId" TEXT NOT NULL,
     "subscriptionId" TEXT NOT NULL,
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
+    "paymentCompleted" BOOLEAN NOT NULL DEFAULT false,
+    "title" VARCHAR(30) NOT NULL,
+    "image" TEXT,
 
     CONSTRAINT "Advertisement_pkey" PRIMARY KEY ("id")
 );
@@ -102,9 +109,24 @@ CREATE TABLE "Subscription" (
 );
 
 -- CreateTable
+CREATE TABLE "Donation" (
+    "id" TEXT NOT NULL,
+    "name" VARCHAR(30) NOT NULL,
+    "mail" CITEXT NOT NULL,
+    "displayName" VARCHAR(30) NOT NULL,
+    "durationStart" DATE,
+    "durationEnd" DATE,
+    "isArchived" BOOLEAN NOT NULL DEFAULT false,
+    "paymentCompleted" BOOLEAN NOT NULL DEFAULT false,
+    "subscriptionId" TEXT NOT NULL,
+
+    CONSTRAINT "Donation_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Benefit" (
     "id" TEXT NOT NULL,
-    "name" VARCHAR(20) NOT NULL,
+    "name" VARCHAR(50) NOT NULL,
     "type" "BenefitType" NOT NULL,
     "endDate" DATE NOT NULL,
     "quantity" INTEGER NOT NULL,
@@ -134,9 +156,9 @@ CREATE TABLE "GreenPoint" (
 CREATE TABLE "Organic" (
     "id" TEXT NOT NULL,
     "name" CITEXT NOT NULL,
-    "imageId" TEXT,
     "isCompostable" BOOLEAN NOT NULL,
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
+    "image" TEXT,
 
     CONSTRAINT "Organic_pkey" PRIMARY KEY ("id")
 );
@@ -145,8 +167,8 @@ CREATE TABLE "Organic" (
 CREATE TABLE "MaterialProduct" (
     "id" TEXT NOT NULL,
     "name" CITEXT NOT NULL,
-    "imageId" TEXT,
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
+    "image" TEXT,
 
     CONSTRAINT "MaterialProduct_pkey" PRIMARY KEY ("id")
 );
@@ -157,8 +179,8 @@ CREATE TABLE "MaterialComponent" (
     "name" CITEXT NOT NULL,
     "recyclableType" "RecyclableType" NOT NULL,
     "description" VARCHAR(1024) NOT NULL,
-    "imageId" TEXT,
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
+    "image" TEXT,
 
     CONSTRAINT "MaterialComponent_pkey" PRIMARY KEY ("id")
 );
@@ -173,10 +195,10 @@ CREATE TABLE "Post" (
     "pointsAwared" INTEGER NOT NULL,
     "userId" TEXT NOT NULL,
     "materialProductId" TEXT NOT NULL,
-    "imageId" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "isReserved" BOOLEAN NOT NULL DEFAULT false,
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
+    "image" TEXT,
 
     CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
 );
@@ -218,28 +240,6 @@ CREATE TABLE "ChatMessage" (
 );
 
 -- CreateTable
-CREATE TABLE "Image" (
-    "id" TEXT NOT NULL,
-    "publicId" TEXT NOT NULL,
-    "format" TEXT NOT NULL,
-    "version" TEXT NOT NULL,
-
-    CONSTRAINT "Image_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "_benefitsActive" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "_benefitsHistory" (
-    "A" TEXT NOT NULL,
-    "B" TEXT NOT NULL
-);
-
--- CreateTable
 CREATE TABLE "_GreenPointToMaterialComponent" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL
@@ -258,9 +258,6 @@ CREATE UNIQUE INDEX "User_mail_key" ON "User"("mail");
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_imageId_key" ON "User"("imageId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Address_greenPointId_key" ON "Address"("greenPointId");
 
 -- CreateIndex
@@ -276,10 +273,10 @@ CREATE UNIQUE INDEX "UserCustomer_userId_key" ON "UserCustomer"("userId");
 CREATE UNIQUE INDEX "Rating_userId_key" ON "Rating"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Advertisement_imageId_key" ON "Advertisement"("imageId");
+CREATE UNIQUE INDEX "Subscription_name_key" ON "Subscription"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Subscription_name_key" ON "Subscription"("name");
+CREATE UNIQUE INDEX "Donation_mail_key" ON "Donation"("mail");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "GreenPoint_idpv_key" ON "GreenPoint"("idpv");
@@ -288,40 +285,13 @@ CREATE UNIQUE INDEX "GreenPoint_idpv_key" ON "GreenPoint"("idpv");
 CREATE UNIQUE INDEX "Organic_name_key" ON "Organic"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Organic_imageId_key" ON "Organic"("imageId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "MaterialProduct_name_key" ON "MaterialProduct"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "MaterialProduct_imageId_key" ON "MaterialProduct"("imageId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "MaterialComponent_name_key" ON "MaterialComponent"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "MaterialComponent_imageId_key" ON "MaterialComponent"("imageId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Post_postNumber_key" ON "Post"("postNumber");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Post_imageId_key" ON "Post"("imageId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Image_publicId_key" ON "Image"("publicId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_benefitsActive_AB_unique" ON "_benefitsActive"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_benefitsActive_B_index" ON "_benefitsActive"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_benefitsHistory_AB_unique" ON "_benefitsHistory"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_benefitsHistory_B_index" ON "_benefitsHistory"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_GreenPointToMaterialComponent_AB_unique" ON "_GreenPointToMaterialComponent"("A", "B");
@@ -336,13 +306,13 @@ CREATE UNIQUE INDEX "_MaterialProductToMaterialComponent_AB_unique" ON "_Materia
 CREATE INDEX "_MaterialProductToMaterialComponent_B_index" ON "_MaterialProductToMaterialComponent"("B");
 
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Address" ADD CONSTRAINT "Address_greenPointId_fkey" FOREIGN KEY ("greenPointId") REFERENCES "GreenPoint"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserStore" ADD CONSTRAINT "UserStore_subscriptionId_fkey" FOREIGN KEY ("subscriptionId") REFERENCES "Subscription"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserStore" ADD CONSTRAINT "UserStore_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -360,22 +330,7 @@ ALTER TABLE "Advertisement" ADD CONSTRAINT "Advertisement_subscriptionId_fkey" F
 ALTER TABLE "Advertisement" ADD CONSTRAINT "Advertisement_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Advertisement" ADD CONSTRAINT "Advertisement_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Benefit" ADD CONSTRAINT "Benefit_userStoreId_fkey" FOREIGN KEY ("userStoreId") REFERENCES "UserStore"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Organic" ADD CONSTRAINT "Organic_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "MaterialProduct" ADD CONSTRAINT "MaterialProduct_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "MaterialComponent" ADD CONSTRAINT "MaterialComponent_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Post" ADD CONSTRAINT "Post_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_materialProductId_fkey" FOREIGN KEY ("materialProductId") REFERENCES "MaterialProduct"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -397,18 +352,6 @@ ALTER TABLE "ChatMessage" ADD CONSTRAINT "ChatMessage_receiverId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "ChatMessage" ADD CONSTRAINT "ChatMessage_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_benefitsActive" ADD CONSTRAINT "_benefitsActive_A_fkey" FOREIGN KEY ("A") REFERENCES "Benefit"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_benefitsActive" ADD CONSTRAINT "_benefitsActive_B_fkey" FOREIGN KEY ("B") REFERENCES "UserCustomer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_benefitsHistory" ADD CONSTRAINT "_benefitsHistory_A_fkey" FOREIGN KEY ("A") REFERENCES "Benefit"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_benefitsHistory" ADD CONSTRAINT "_benefitsHistory_B_fkey" FOREIGN KEY ("B") REFERENCES "UserCustomer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_GreenPointToMaterialComponent" ADD CONSTRAINT "_GreenPointToMaterialComponent_A_fkey" FOREIGN KEY ("A") REFERENCES "GreenPoint"("id") ON DELETE CASCADE ON UPDATE CASCADE;

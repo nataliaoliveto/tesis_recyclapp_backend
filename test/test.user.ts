@@ -12,14 +12,6 @@ export async function mainUser() {
   //     id: 32,
   //   },
   // });
-  // await prisma.user.update({
-  //   where: {
-  //     id: "cle0gegsm0000v8dwm58hlynv",
-  //   },
-  //   data: {
-  //     imageId: "cle0gipph0000v8f84s5uycmc",
-  //   },
-  // });
   // await prisma.user.create({
   //   data: {
   //     name: "Elsa",
