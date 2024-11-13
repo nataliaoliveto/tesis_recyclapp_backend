@@ -4,23 +4,23 @@ import benefitAssignmentController from "../controllers/benefitAssignment.contro
 const router = Router();
 
 router.get(
-  "/benefit-assignments",
+  "/benefitassignments",
   benefitAssignmentController.getBenefitAssignments
 );
 router.get(
-  "/benefit-assignment:id",
+  "/benefitassignment:id",
   benefitAssignmentController.getBenefitAssignment
 );
 router.post(
-  "/benefit-assignment",
+  "/benefitassignment",
   benefitAssignmentController.createBenefitAssignment
 );
 router.put(
-  "/benefit-assignment/:id",
+  "/benefitassignment/:id",
   benefitAssignmentController.updateBenefitAssignment
 );
 router.delete(
-  "/benefit-assignment/:id",
+  "/benefitassignment/:id",
   benefitAssignmentController.deleteBenefitAssignment
 );
 
