@@ -104,12 +104,11 @@ async function main() {
   // await mainUserCustomer();
   // await mainBenefit();
   // await mainBenefit();
-
   // ! +++++++++++++++ RUN +++++++++++++++
-  await mainDisplay();
+  //   await mainDisplay();
 }
 
-main();
+// main();
 
 app.get("/", async (req: any, res: any) => {
   return res.json({ message: "Hello World" });
