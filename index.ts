@@ -75,14 +75,14 @@ app.use("*", (req, res) => {
 });
 
 async function mainDisplay() {
-  // console.log("mainDisplay");
+  console.log("mainDisplay");
   // const arrayFindMany = await prisma.userStore.findMany({});
   // console.log("arrayFindMany", JSON.stringify(arrayFindMany, null, 2));
-  // const arrayFindManyUsers = await prisma.user.findMany({});
-  // console.log(
-  //   "arrayFindManyUsers",
-  //   JSON.stringify(arrayFindManyUsers, null, 1)
-  // );
+  const arrayFindManyUsers = await prisma.user.findMany({});
+  console.log(
+    "arrayFindManyUsers",
+    JSON.stringify(arrayFindManyUsers, null, 1)
+  );
 }
 
 async function main() {
@@ -105,10 +105,10 @@ async function main() {
   // await mainBenefit();
   // await mainBenefit();
   // ! +++++++++++++++ RUN +++++++++++++++
-  //   await mainDisplay();
+  await mainDisplay();
 }
 
-// main();
+main();
 
 app.get("/", async (req: any, res: any) => {
   return res.json({ message: "Hello World" });
