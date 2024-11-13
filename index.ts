@@ -73,9 +73,9 @@ app.use("*", (req, res) => {
 });
 
 async function mainDisplay() {
-  console.log("mainDisplay");
-  const arrayFindMany = await prisma.userStore.findMany({});
-  console.log("arrayFindMany", JSON.stringify(arrayFindMany, null, 2));
+  // console.log("mainDisplay");
+  // const arrayFindMany = await prisma.userStore.findMany({});
+  // console.log("arrayFindMany", JSON.stringify(arrayFindMany, null, 2));
   // const arrayFindManyUsers = await prisma.user.findMany({});
   // console.log(
   //   "arrayFindManyUsers",

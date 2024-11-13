@@ -12,9 +12,6 @@ export async function mainBenefit() {
     },
     update: {
       name: "beneficioTESTupdate",
-      userCustomerActive: {
-        set: [],
-      },
     },
     create: {
       name: "beneficioTEST",
