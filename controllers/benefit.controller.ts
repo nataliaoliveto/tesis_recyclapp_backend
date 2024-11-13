@@ -1,5 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
+import { generateRandomWord } from "../utils/generateRandomWord";
 
 const prisma = new PrismaClient();
 
@@ -36,6 +37,7 @@ const benefitController = {
       const benefit = await prisma.benefit.create({
         data: {
           ...body,
+          generatedCode: generateRandomWord().toUpperCase(),
         },
       });
       res.status(200).json(benefit);
@@ -67,47 +69,6 @@ const benefitController = {
       const benefit = await prisma.benefit.delete({
         where: {
           id: req.params.id,
-        },
-      });
-      res.status(200).json(benefit);
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  },
-
-  async addBenefitUserActive(req: Request, res: Response) {
-    try {
-      const { idUser } = req.body;
-      const { id } = req.params;
-      const benefit = await prisma.benefit.update({
-        where: {
-          id: id,
-        },
-        data: {
-          userCustomerActive: {
-            connect: { id: idUser },
-          },
-        },
-      });
-      res.status(200).json(benefit);
-    } catch (error) {
-      res.status(404).json(error);
-      res.status(500).json(error);
-    }
-  },
-
-  async removeBenefitUserActive(req: Request, res: Response) {
-    try {
-      const { idUser } = req.body;
-      const { id } = req.params;
-      const benefit = await prisma.benefit.update({
-        where: {
-          id: id,
-        },
-        data: {
-          userCustomerActive: {
-            disconnect: { id: idUser },
-          },
         },
       });
       res.status(200).json(benefit);

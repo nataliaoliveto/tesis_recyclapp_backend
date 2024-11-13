@@ -13,3 +13,4 @@ export { default as chatMessageRouter } from "./chatMessage.routes";
 export { default as chatRouter } from "./chat.routes";
 export { default as donationRouter } from "./donation.route";
 export { default as benefitRouter } from "./benefit.routes";
+export { default as benefitAssignmentRouter } from "./benefitAssignment.routes";
