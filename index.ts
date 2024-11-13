@@ -17,6 +17,7 @@ import {
   chatRouter,
   donationRouter,
   benefitRouter,
+  benefitAssignmentRouter,
 } from "./routes";
 
 import {
@@ -59,6 +60,7 @@ app.use("/api", chatMessageRouter);
 app.use("/api", chatRouter);
 app.use("/api", donationRouter);
 app.use("/api", benefitRouter);
+app.use("/api", benefitAssignmentRouter);
 
 app.use("*", (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
