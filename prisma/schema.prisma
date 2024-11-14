@@ -137,16 +137,17 @@ model MaterialProduct {
   name              String              @unique @db.Citext
   isArchived        Boolean             @default(false)
   Post              Post[]
-  materialComponent MaterialComponent[] @relation("MaterialProductToMaterialComponent")
+  materialComponent MaterialComponent[]
 }
 
 model MaterialComponent {
-  id              String            @id @default(cuid())
-  name            String            @unique @db.Citext
-  isRecyclable    Boolean
-  description     String            @db.VarChar(1024)
-  isArchived      Boolean           @default(false)
-  MaterialProduct MaterialProduct[] @relation("MaterialProductToMaterialComponent")
+  id                String          @id @default(cuid())
+  name              String          @unique @db.Citext
+  isRecyclable      Boolean
+  description       String          @db.VarChar(1024)
+  isArchived        Boolean         @default(false)
+  materialProductId String
+  materialProduct   MaterialProduct @relation(fields: [materialProductId], references: [id])
 }
 
 model Post {
