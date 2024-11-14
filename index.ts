@@ -10,7 +10,6 @@ import {
   organicRouter,
   materialProductRouter,
   materialComponentRouter,
-  greenPointRouter,
   postRouter,
   postCommitmentRouter,
   chatMessageRouter,
@@ -29,7 +28,6 @@ import {
   mainOrganic,
   mainMaterialComponent,
   mainMaterialProduct,
-  mainGreenPoint,
   mainPost,
   mainPostCommitment,
   mainChat,
@@ -53,7 +51,6 @@ app.use("/api", advertisementRouter);
 app.use("/api", organicRouter);
 app.use("/api", materialProductRouter);
 app.use("/api", materialComponentRouter);
-app.use("/api", greenPointRouter);
 app.use("/api", postRouter);
 app.use("/api", postCommitmentRouter);
 app.use("/api", chatMessageRouter);
@@ -95,7 +92,6 @@ async function main() {
   // await mainOrganic();
   // await mainMaterialComponent();
   // await mainMaterialProduct();
-  // await mainGreenPoint();
   // await mainPost();
   // await mainPostCommitment();
   // await mainChat();

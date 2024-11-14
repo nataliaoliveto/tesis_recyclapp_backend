@@ -31,19 +31,17 @@ model User {
 }
 
 model Address {
-  id           String      @id @default(cuid())
-  street       String      @db.VarChar(50)
-  flat         String?     @db.VarChar(10)
-  city         String      @db.VarChar(50)
-  state        String      @db.VarChar(50)
-  latitude     Float?
-  longitude    Float?
-  greenPointId String?     @unique
-  userId       String?
-  isArchived   Boolean     @default(false)
-  postalCode   String      @db.VarChar(4)
-  GreenPoint   GreenPoint? @relation(fields: [greenPointId], references: [id])
-  User         User?       @relation(fields: [userId], references: [id])
+  id         String  @id @default(cuid())
+  street     String  @db.VarChar(50)
+  flat       String? @db.VarChar(10)
+  city       String  @db.VarChar(50)
+  state      String  @db.VarChar(50)
+  latitude   Float?
+  longitude  Float?
+  userId     String?
+  isArchived Boolean @default(false)
+  postalCode String  @db.VarChar(4)
+  User       User?   @relation(fields: [userId], references: [id])
 }
 
 model UserStore {
@@ -127,19 +125,6 @@ model Benefit {
   benefitAssignments BenefitAssignment[]
 }
 
-model GreenPoint {
-  id                String              @id @default(cuid())
-  idpv              String              @unique @db.Citext
-  name              String              @db.VarChar(50)
-  availability      Json                @db.Json
-  type              String              @db.VarChar(50)
-  cooperative       String              @db.VarChar(200)
-  hasOrganic        Boolean             @default(false)
-  isArchived        Boolean             @default(false)
-  Address           Address?
-  materialComponent MaterialComponent[] @relation("GreenPointToMaterialComponent")
-}
-
 model Organic {
   id            String  @id @default(cuid())
   name          String  @unique @db.Citext
@@ -158,10 +143,9 @@ model MaterialProduct {
 model MaterialComponent {
   id              String            @id @default(cuid())
   name            String            @unique @db.Citext
-  recyclableType  RecyclableType
+  isRecyclable    Boolean
   description     String            @db.VarChar(1024)
   isArchived      Boolean           @default(false)
-  GreenPoint      GreenPoint[]      @relation("GreenPointToMaterialComponent")
   MaterialProduct MaterialProduct[] @relation("MaterialProductToMaterialComponent")
 }
 
@@ -235,13 +219,6 @@ enum BenefitType {
   DISCOUNT
   PRODUCT
   DOUBLEPRODUCT
-}
-
-enum RecyclableType {
-  RECYCLABLE
-  NO_RECYCLABLE
-  DEPENDS
-  ORGANIC
 }
 
 enum PostPurpouse {

@@ -3,7 +3,6 @@ export * from "./test.advertisement";
 export * from "./test.benefit";
 export * from "./test.chat";
 export * from "./test.chatMessage";
-export * from "./test.greenPoint";
 export * from "./test.materialComponent";
 export * from "./test.materialProduct";
 export * from "./test.organic";
