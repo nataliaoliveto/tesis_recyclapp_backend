@@ -64,8 +64,8 @@ model UserCustomer {
   pointsCurrent     Int                 @default(0)
   pointsTotal       Int                 @default(0)
   userId            String              @unique
-  User              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   BenefitAssignment BenefitAssignment[]
+  User              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Rating {
