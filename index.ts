@@ -17,26 +17,10 @@ import {
   donationRouter,
   benefitRouter,
   benefitAssignmentRouter,
+  imageRouter,
 } from "./routes";
 
-import {
-  mainUser,
-  mainAddress,
-  mainRating,
-  mainSubscription,
-  mainAdvertisement,
-  mainOrganic,
-  mainMaterialComponent,
-  mainMaterialProduct,
-  mainPost,
-  mainPostCommitment,
-  mainChat,
-  mainChatMessage,
-  mainUserStore,
-  mainBenefit,
-} from "./test";
-
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -58,6 +42,7 @@ app.use("/api", chatRouter);
 app.use("/api", donationRouter);
 app.use("/api", benefitRouter);
 app.use("/api", benefitAssignmentRouter);
+app.use("/api", imageRouter);
 
 app.use("*", (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -68,13 +53,10 @@ app.use("*", (req, res) => {
   res.status(404).json({
     message: "Not Found",
   });
-  // res.header("Access-Control-Allow-Origin", "http://localhost:3000/");
 });
 
 async function mainDisplay() {
   console.log("mainDisplay");
-  // const arrayFindMany = await prisma.userStore.findMany({});
-  // console.log("arrayFindMany", JSON.stringify(arrayFindMany, null, 2));
   const arrayFindManyUsers = await prisma.user.findMany({});
   console.log(
     "arrayFindManyUsers",
@@ -83,25 +65,7 @@ async function mainDisplay() {
 }
 
 async function main() {
-  // ! +++++++++++++++ RUN +++++++++++++++
-  // await mainUser();
-  // await mainAddress();
-  // await mainRating();
-  // await mainSubscription();
-  // await mainAdvertisement();
-  // await mainOrganic();
-  // await mainMaterialComponent();
-  // await mainMaterialProduct();
-  // await mainPost();
-  // await mainPostCommitment();
-  // await mainChat();
-  // await mainChatMessage();
-  // await mainUserStore();
-  // await mainUserCustomer();
-  // await mainBenefit();
-  // await mainBenefit();
-  // ! +++++++++++++++ RUN +++++++++++++++
-  await mainDisplay(); //
+  await mainDisplay();
 }
 
 main();

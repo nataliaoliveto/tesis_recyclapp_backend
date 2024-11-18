@@ -17,7 +17,7 @@ export function handleUpload(
       imageUploaded,
       {
         width: 400,
-        height: 300,
+        height: 400,
         crop: "fill",
         public_id: publicid,
         folder: "RecyclApp/" + subfolder,
