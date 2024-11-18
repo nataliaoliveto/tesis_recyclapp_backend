@@ -71,6 +71,7 @@ model Rating {
   text       String  @db.VarChar(255)
   value      Int
   userId     String  @unique
+  userName   String  @db.VarChar(24)
   isArchived Boolean @default(false)
   user       User    @relation(fields: [userId], references: [id])
 }
