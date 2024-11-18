@@ -101,6 +101,26 @@ const userController = {
       res.status(500).json({ error });
     }
   },
+
+  async updateUserCustomer(req: Request, res: Response) {
+    const { body } = req;
+    const { id } = req.params;
+
+    try {
+      const user = await prisma.userCustomer.update({
+        where: {
+          id: id,
+        },
+        data: {
+          ...body,
+        },
+      });
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(500).json({ error });
+    }
+  },
+
   async deleteUser(req: Request, res: Response) {
     const { id } = req.params;
     try {
