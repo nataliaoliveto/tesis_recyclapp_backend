@@ -35,11 +35,7 @@ const advertisementController = {
         },
         text: body.text,
         title: body.title,
-        user: {
-          connect: {
-            id: body.userId,
-          },
-        },
+        userId: body.userId,
       };
       const advertisement = await prisma.advertisement.create({
         data: {
@@ -47,8 +43,8 @@ const advertisementController = {
         },
       });
 
-      console.log('advertisement', advertisement)
-      
+      console.log("advertisement", advertisement);
+
       res.status(201).json({ advertisementId: advertisement.id });
     } catch (error) {
       res.status(500).json(error);
@@ -70,11 +66,7 @@ const advertisementController = {
           },
           text: body.text,
           title: body.title,
-          user: {
-            connect: {
-              id: body.userId,
-            },
-          },
+          userId: body.userId,
         },
       };
       const advertisement = await prisma.advertisement.update(
@@ -101,11 +93,7 @@ const advertisementController = {
           },
           text: body.text,
           title: body.title,
-          user: {
-            connect: {
-              id: body.userId,
-            },
-          },
+          userId: body.userId,
         },
         create: {
           subscription: {
@@ -115,11 +103,7 @@ const advertisementController = {
           },
           text: body.text,
           title: body.title,
-          user: {
-            connect: {
-              id: body.userId,
-            },
-          },
+          userId: body.userId,
         },
       };
       const advertisement = await prisma.advertisement.upsert(

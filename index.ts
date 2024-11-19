@@ -14,7 +14,6 @@ import {
   postCommitmentRouter,
   chatMessageRouter,
   chatRouter,
-  donationRouter,
   benefitRouter,
   benefitAssignmentRouter,
   imageRouter,
@@ -39,7 +38,6 @@ app.use("/api", postRouter);
 app.use("/api", postCommitmentRouter);
 app.use("/api", chatMessageRouter);
 app.use("/api", chatRouter);
-app.use("/api", donationRouter);
 app.use("/api", benefitRouter);
 app.use("/api", benefitAssignmentRouter);
 app.use("/api", imageRouter);

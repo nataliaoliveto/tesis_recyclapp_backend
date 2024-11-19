@@ -100,18 +100,6 @@ model Subscription {
   userStores     UserStore[]
 }
 
-model Donation {
-  id               String    @id @default(cuid())
-  name             String    @db.VarChar(30)
-  mail             String    @unique @db.Citext
-  displayName      String    @db.VarChar(30)
-  durationStart    DateTime? @db.Date
-  durationEnd      DateTime? @db.Date
-  isArchived       Boolean   @default(false)
-  paymentCompleted Boolean   @default(false)
-  subscriptionId   String
-}
-
 model Benefit {
   id                 String              @id @default(cuid())
   name               String              @db.VarChar(50)
