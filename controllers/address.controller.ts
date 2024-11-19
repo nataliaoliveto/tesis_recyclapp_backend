@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import type { Request, Response } from "express";
 
 const prisma = new PrismaClient();
@@ -12,6 +12,21 @@ const addressController = {
         },
       });
       res.status(200).json(addresses);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  async getAddressClerk(req: Request, res: Response) {
+    const { id } = req.params;
+    console.log("backend");
+    try {
+      const address = await prisma.address.findMany({
+        where: {
+          userId: id,
+          isArchived: false,
+        },
+      });
+      res.status(200).json(address);
     } catch (error) {
       res.status(500).json(error);
     }
