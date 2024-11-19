@@ -46,7 +46,6 @@ model Address {
 
 model UserStore {
   id               String       @id @default(cuid())
-  displayName      String       @unique @db.Citext
   userId           String       @unique
   expiryDate       DateTime     @db.Date
   hasBenefits      Boolean      @default(false)

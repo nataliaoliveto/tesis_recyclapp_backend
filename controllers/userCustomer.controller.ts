@@ -45,7 +45,9 @@ const userCustomerController = {
     try {
       const userCustomer = await prisma.userCustomer.create({
         data: {
-          ...body,
+          pointsCurrent: 0,
+          pointsTotal: 0,
+          userId: body.userId,
         },
       });
 
