@@ -9,26 +9,26 @@ datasource db {
   extensions = [citext]
 }
 
-model User {
-  id                  String          @id @default(cuid())
-  name                String          @db.VarChar(30)
-  surname             String          @db.VarChar(30)
-  mail                String          @unique @db.Citext
-  phone               String          @db.VarChar(13)
-  password            String          @db.VarChar(255)
-  username            String          @unique @db.Citext
-  isArchived          Boolean         @default(false)
-  userType            UserType
-  createDate          DateTime        @default(now())
-  address             Address[]
-  Advertisement       Advertisement[]
-  ChatMessageReceived ChatMessage[]   @relation("chatReceiver")
-  ChatMessageSent     ChatMessage[]   @relation("chatSender")
-  Post                Post[]
-  Rating              Rating?
-  UserCustomer        UserCustomer?
-  UserStore           UserStore?
-}
+// model User {
+//   id                  String          @id @default(cuid())
+//   name                String          @db.VarChar(30)
+//   surname             String          @db.VarChar(30)
+//   mail                String          @unique @db.Citext
+//   phone               String          @db.VarChar(13)
+//   password            String          @db.VarChar(255)
+//   username            String          @unique @db.Citext
+//   isArchived          Boolean         @default(false)
+//   userType            UserType
+//   createDate          DateTime        @default(now())
+//   address             Address[]
+//   Advertisement       Advertisement[]
+//   ChatMessageReceived ChatMessage[]   @relation("chatReceiver")
+//   ChatMessageSent     ChatMessage[]   @relation("chatSender")
+//   Post                Post[]
+//   Rating              Rating?
+//   UserCustomer        UserCustomer?
+//   UserStore           UserStore?
+// }
 
 model Address {
   id         String  @id @default(cuid())
@@ -41,7 +41,7 @@ model Address {
   userId     String?
   isArchived Boolean @default(false)
   postalCode String  @db.VarChar(4)
-  User       User?   @relation(fields: [userId], references: [id])
+  // User       User?   @relation(fields: [userId], references: [id])
 }
 
 model UserStore {
@@ -54,7 +54,7 @@ model UserStore {
   paymentCompleted Boolean      @default(false)
   Benefit          Benefit[]
   subscription     Subscription @relation(fields: [subscriptionId], references: [id])
-  User             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // User             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UserCustomer {
@@ -63,7 +63,7 @@ model UserCustomer {
   pointsTotal       Int                 @default(0)
   userId            String              @unique
   BenefitAssignment BenefitAssignment[]
-  User              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // User              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Rating {
@@ -73,7 +73,7 @@ model Rating {
   userId     String  @unique
   userName   String  @db.VarChar(24)
   isArchived Boolean @default(false)
-  user       User    @relation(fields: [userId], references: [id])
+  // user       User    @relation(fields: [userId], references: [id])
 }
 
 model Advertisement {
@@ -87,7 +87,7 @@ model Advertisement {
   paymentCompleted Boolean      @default(false)
   title            String       @db.VarChar(30)
   subscription     Subscription @relation(fields: [subscriptionId], references: [id])
-  user             User         @relation(fields: [userId], references: [id])
+  // user             User         @relation(fields: [userId], references: [id])
 }
 
 model Subscription {
@@ -166,7 +166,7 @@ model Post {
   isArchived        Boolean          @default(false)
   Chat              Chat[]
   materialProduct   MaterialProduct  @relation(fields: [materialProductId], references: [id])
-  userPost          User             @relation(fields: [userId], references: [id])
+  // userPost          User             @relation(fields: [userId], references: [id])
   PostCommitment    PostCommitment[]
 }
 
@@ -199,8 +199,8 @@ model ChatMessage {
   chatId     String
   isArchived Boolean  @default(false)
   chat       Chat     @relation(fields: [chatId], references: [id])
-  receiver   User     @relation("chatReceiver", fields: [receiverId], references: [id])
-  sender     User     @relation("chatSender", fields: [senderId], references: [id])
+  // receiver   User     @relation("chatReceiver", fields: [receiverId], references: [id])
+  // sender     User     @relation("chatSender", fields: [senderId], references: [id])
 }
 
 model BenefitAssignment {

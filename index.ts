@@ -57,11 +57,11 @@ app.use("*", (req, res) => {
 
 async function mainDisplay() {
   console.log("mainDisplay");
-  const arrayFindManyUsers = await prisma.user.findMany({});
-  console.log(
-    "arrayFindManyUsers",
-    JSON.stringify(arrayFindManyUsers, null, 1)
-  );
+  // const arrayFindManyUsers = await prisma.user.findMany({});
+  // console.log(
+  //   "arrayFindManyUsers",
+  //   JSON.stringify(arrayFindManyUsers, null, 1)
+  // );
 }
 
 async function main() {
