@@ -21,7 +21,6 @@ export async function mainUserStore() {
     },
     create: {
       userId: "cleuipzo60002v8fcwfmyp9xk",
-      displayName: "Store Test",
       subscriptionId: "clekcsml00001v8xcwjh39nod",
       expiryDate: new Date("2024-12-31T23:59:59Z"),
     },
