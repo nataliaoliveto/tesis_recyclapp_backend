@@ -11,6 +11,14 @@ router.get(
   "/benefitassignment:id",
   benefitAssignmentController.getBenefitAssignment
 );
+router.get(
+  "/benefitassignment/user/:id",
+  benefitAssignmentController.getBenefitAssignmentsUserCustomer
+);
+router.post(
+  "/benefitassignment/storeBenefits",
+  benefitAssignmentController.getBenefitAssignmentsByStoreBenefits
+);
 router.post(
   "/benefitassignment",
   benefitAssignmentController.createBenefitAssignment

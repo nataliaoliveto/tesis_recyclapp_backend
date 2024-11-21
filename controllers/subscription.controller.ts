@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 const subscriptionController = {
   async getSubscriptions(req: Request, res: Response) {
     try {
-      const subscriptions = await prisma.subscription.findMany();
+      const subscriptions = await prisma.subscription.findMany({
+        where: {
+          isArchived: false,
+        },
+      });
       res.status(200).json(subscriptions);
     } catch (error) {
       res.status(500).json(error);
@@ -17,6 +21,7 @@ const subscriptionController = {
       const subscription = await prisma.subscription.findUnique({
         where: {
           id: req.params.id,
+          isArchived: false,
         },
       });
       res.status(200).json(subscription);

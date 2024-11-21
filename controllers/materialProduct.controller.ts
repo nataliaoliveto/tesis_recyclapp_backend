@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 const materialProductController = {
   async getMaterialProducts(req: Request, res: Response) {
     try {
-      const materialProducts = await prisma.materialProduct.findMany();
+      const materialProducts = await prisma.materialProduct.findMany({
+        where: {
+          isArchived: false,
+        },
+      });
       res.status(200).json(materialProducts);
     } catch (error) {
       res.status(500).json(error);
@@ -16,7 +20,7 @@ const materialProductController = {
     try {
       const { id } = req.params;
       const materialProduct = await prisma.materialProduct.findUnique({
-        where: { id },
+        where: { id, isArchived: false },
       });
       res.status(200).json(materialProduct);
     } catch (error) {

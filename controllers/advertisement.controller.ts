@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 const advertisementController = {
   async getAdvertisements(req: Request, res: Response) {
     try {
-      const advertisements = await prisma.advertisement.findMany();
+      const advertisements = await prisma.advertisement.findMany({
+        where: {
+          isArchived: false,
+        },
+      });
       res.status(200).json(advertisements);
     } catch (error) {
       res.status(500).json(error);
@@ -17,6 +21,7 @@ const advertisementController = {
       const advertisement = await prisma.advertisement.findUnique({
         where: {
           id: req.params.id,
+          isArchived: false,
         },
       });
       res.status(200).json(advertisement);

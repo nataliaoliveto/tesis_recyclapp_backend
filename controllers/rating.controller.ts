@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 const ratingController = {
   async getRatings(req: Request, res: Response) {
     try {
-      const ratings = await prisma.rating.findMany();
+      const ratings = await prisma.rating.findMany({
+        where: {
+          isArchived: false,
+        },
+      });
       res.status(200).json(ratings);
     } catch (error) {
       res.status(500).json(error);
@@ -18,6 +22,7 @@ const ratingController = {
       const rating = await prisma.rating.findUnique({
         where: {
           id: id,
+          isArchived: false,
         },
       });
       res.status(200).json(rating);

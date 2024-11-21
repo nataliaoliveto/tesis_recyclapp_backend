@@ -1,6 +1,5 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import type { Request, Response } from "express";
-import { generateRandomWord } from "../utils/generateRandomWord";
 
 const prisma = new PrismaClient();
 
@@ -24,6 +23,22 @@ const benefitController = {
       const benefit = await prisma.benefit.findUnique({
         where: {
           id: req.params.id,
+          isActive: true,
+          isArchived: false,
+        },
+      });
+      res.status(200).json(benefit);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  async getBenefitsByStore(req: Request, res: Response) {
+    try {
+      const benefit = await prisma.benefit.findMany({
+        where: {
+          userStoreId: req.params.id,
+          isArchived: false,
+          isActive: true,
         },
       });
       res.status(200).json(benefit);
@@ -37,7 +52,6 @@ const benefitController = {
       const benefit = await prisma.benefit.create({
         data: {
           ...body,
-          generatedCode: generateRandomWord().toUpperCase(),
         },
       });
       res.status(200).json(benefit);

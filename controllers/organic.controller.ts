@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 const organicController = {
   async getOrganics(req: Request, res: Response) {
     try {
-      const organics = await prisma.organic.findMany();
+      const organics = await prisma.organic.findMany({
+        where: {
+          isArchived: false,
+        },
+      });
       res.status(200).json(organics);
     } catch (error) {
       res.status(500).json(error);
@@ -16,7 +20,7 @@ const organicController = {
     try {
       const { id } = req.params;
       const organic = await prisma.organic.findUnique({
-        where: { id: id },
+        where: { id: id, isArchived: false },
       });
       res.status(200).json(organic);
     } catch (error) {

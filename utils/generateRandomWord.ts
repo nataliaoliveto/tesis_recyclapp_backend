@@ -27,5 +27,11 @@ export function generateRandomWord() {
   ];
 
   const randomIndex = Math.floor(Math.random() * words.length);
-  return words[randomIndex].toUpperCase();
+  const randomWord = words[randomIndex].toUpperCase();
+
+  const randomNumbers = Array.from({ length: 3 }, () =>
+    Math.floor(Math.random() * 10)
+  ).join("");
+
+  return `${randomWord}${randomNumbers}`;
 }

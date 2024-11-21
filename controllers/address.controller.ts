@@ -18,7 +18,6 @@ const addressController = {
   },
   async getAddressClerk(req: Request, res: Response) {
     const { id } = req.params;
-    console.log("backend");
     try {
       const address = await prisma.address.findMany({
         where: {
@@ -26,6 +25,13 @@ const addressController = {
           isArchived: false,
         },
       });
+
+      if (address.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "No addresses found for this user." });
+      }
+
       res.status(200).json(address);
     } catch (error) {
       res.status(500).json(error);
@@ -54,14 +60,12 @@ const addressController = {
       });
       res.status(200).json(address);
     } catch (error) {
-      console.log("error", error);
       res.status(500).json(error);
     }
   },
   async updateAddress(req: Request, res: Response) {
     const { id } = req.params;
     const { body } = req;
-    console.log("req", body, id);
     try {
       const address = await prisma.address.update({
         where: {
@@ -73,7 +77,6 @@ const addressController = {
       });
       res.status(200).json(address);
     } catch (error) {
-      console.log("error", error);
       res.status(500).json(error);
     }
   },
@@ -87,7 +90,6 @@ const addressController = {
       });
       res.status(200).json(address);
     } catch (error) {
-      console.log("error", error);
       res.status(500).json(error);
     }
   },
