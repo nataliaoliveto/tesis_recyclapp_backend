@@ -10,6 +10,9 @@ const benefitController = {
         where: {
           isArchived: false,
           isActive: true,
+          quantity: {
+            gt: 0,
+          },
         },
       });
 
@@ -25,6 +28,9 @@ const benefitController = {
           id: req.params.id,
           isActive: true,
           isArchived: false,
+          quantity: {
+            gt: 0,
+          },
         },
       });
       res.status(200).json(benefit);
@@ -39,6 +45,9 @@ const benefitController = {
           userStoreId: req.params.id,
           isArchived: false,
           isActive: true,
+          quantity: {
+            gt: 0,
+          },
         },
       });
       res.status(200).json(benefit);
