@@ -7,7 +7,9 @@ const prisma = new PrismaClient();
 const userCustomerController = {
   async getUserCustomers(req: Request, res: Response) {
     try {
-      const userCustomers = await prisma.userCustomer.findMany();
+      const userCustomers = await prisma.userCustomer.findMany({
+        include: { pointsHistory: true },
+      });
       res.status(200).json(userCustomers);
     } catch (error) {
       res.status(500).json({ error });
@@ -20,6 +22,7 @@ const userCustomerController = {
         where: {
           id: id,
         },
+        include: { pointsHistory: true },
       });
       res.status(200).json(userCustomer);
     } catch (error) {
@@ -33,6 +36,7 @@ const userCustomerController = {
         where: {
           userId: id,
         },
+        include: { pointsHistory: true },
       });
       res.status(200).json(userCustomer);
     } catch (error) {
