@@ -62,6 +62,7 @@ model UserCustomer {
   pointsTotal       Int                 @default(0)
   userId            String              @unique
   BenefitAssignment BenefitAssignment[]
+  pointsHistory     UserPointsHistory[]
   // User              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -198,6 +199,20 @@ model BenefitAssignment {
   isActive       Boolean      @default(true)
   benefit        Benefit      @relation(fields: [benefitId], references: [id])
   userCustomer   UserCustomer @relation(fields: [userCustomerId], references: [id])
+}
+
+model UserPointsHistory {
+  id                    Int          @id @default(autoincrement())
+  userCustomerId        String
+  userCustomer          UserCustomer @relation(fields: [userCustomerId], references: [id])
+  userId                String
+  pointsChange          Int
+  previousPointsCurrent Int
+  newPointsCurrent      Int
+  previousPointsTotal   Int
+  newPointsTotal        Int
+  description           String?
+  createdAt             DateTime     @default(now())
 }
 
 enum UserType {
