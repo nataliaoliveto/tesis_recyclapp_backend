@@ -1,5 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
+import { generateRandomWord } from "../utils/generateRandomWord";
 
 const prisma = new PrismaClient();
 
@@ -18,6 +19,7 @@ const postCommitmentController = {
       const postCommitment = await prisma.postCommitment.findUnique({
         where: {
           id: id,
+          tokenCode: generateRandomWord().toUpperCase(),
         },
       });
       res.status(200).json(postCommitment);
