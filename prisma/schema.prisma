@@ -142,11 +142,10 @@ model MaterialComponent {
 
 model Post {
   id                String           @id @default(cuid())
-  postNumber        Int              @unique @db.SmallInt
   quantity          Int              @db.SmallInt
   description       String           @db.VarChar(255)
   purpouse          PostPurpouse
-  pointsAwared      Int
+  pointsAwarded     Int              @map("pointsAwared")
   userId            String
   materialProductId String
   isActive          Boolean          @default(true)
