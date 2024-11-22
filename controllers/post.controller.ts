@@ -23,6 +23,17 @@ const postController = {
       res.status(500).json(error);
     }
   },
+  async getPostsByClerkId(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const post = await prisma.post.findMany({
+        where: { userId: id },
+      });
+      res.status(200).json(post);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
   async createPost(req: Request, res: Response) {
     try {
       const { body } = req;
