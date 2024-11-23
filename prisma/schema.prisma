@@ -147,6 +147,7 @@ model Post {
   purpouse          PostPurpouse
   pointsAwarded     Int              @map("pointsAwared")
   userId            String
+  username          String           @default("changeDefault")
   materialProductId String
   isActive          Boolean          @default(true)
   isReserved        Boolean          @default(false)
