@@ -9,27 +9,6 @@ datasource db {
   extensions = [citext]
 }
 
-// model User {
-//   id                  String          @id @default(cuid())
-//   name                String          @db.VarChar(30)
-//   surname             String          @db.VarChar(30)
-//   mail                String          @unique @db.Citext
-//   phone               String          @db.VarChar(13)
-//   password            String          @db.VarChar(255)
-//   username            String          @unique @db.Citext
-//   isArchived          Boolean         @default(false)
-//   userType            UserType
-//   createDate          DateTime        @default(now())
-//   address             Address[]
-//   Advertisement       Advertisement[]
-//   ChatMessageReceived ChatMessage[]   @relation("chatReceiver")
-//   ChatMessageSent     ChatMessage[]   @relation("chatSender")
-//   Post                Post[]
-//   Rating              Rating?
-//   UserCustomer        UserCustomer?
-//   UserStore           UserStore?
-// }
-
 model Address {
   id         String  @id @default(cuid())
   street     String  @db.VarChar(50)
@@ -41,7 +20,6 @@ model Address {
   userId     String?
   isArchived Boolean @default(false)
   postalCode String  @db.VarChar(4)
-  // User       User?   @relation(fields: [userId], references: [id])
 }
 
 model UserStore {
@@ -53,7 +31,6 @@ model UserStore {
   paymentCompleted Boolean      @default(false)
   Benefit          Benefit[]
   subscription     Subscription @relation(fields: [subscriptionId], references: [id])
-  // User             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UserCustomer {
@@ -63,7 +40,6 @@ model UserCustomer {
   userId            String              @unique
   BenefitAssignment BenefitAssignment[]
   pointsHistory     UserPointsHistory[]
-  // User              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Rating {
@@ -73,7 +49,6 @@ model Rating {
   userId     String  @unique
   userName   String  @db.VarChar(24)
   isArchived Boolean @default(false)
-  // user       User    @relation(fields: [userId], references: [id])
 }
 
 model Advertisement {
@@ -87,7 +62,6 @@ model Advertisement {
   paymentCompleted Boolean      @default(false)
   title            String       @db.VarChar(30)
   subscription     Subscription @relation(fields: [subscriptionId], references: [id])
-  // user             User         @relation(fields: [userId], references: [id])
 }
 
 model Subscription {
@@ -154,7 +128,6 @@ model Post {
   isArchived        Boolean          @default(false)
   Chat              Chat[]
   materialProduct   MaterialProduct  @relation(fields: [materialProductId], references: [id])
-  // userPost          User             @relation(fields: [userId], references: [id])
   PostCommitment    PostCommitment[]
   Comment           Comment[]
 }
@@ -169,14 +142,18 @@ model PostCommitment {
 }
 
 model Chat {
-  id          String        @id @default(cuid())
-  postId      String
-  startDate   DateTime      @db.Date
-  endDate     DateTime?     @db.Date
-  isActive    Boolean       @default(true)
-  isArchived  Boolean       @default(false)
-  post        Post          @relation(fields: [postId], references: [id])
-  ChatMessage ChatMessage[]
+  id            String        @id @default(cuid())
+  postId        String
+  userPostId    String
+  userCommentId String
+  startDate     DateTime      @default(now())
+  endDate       DateTime?     @db.Date
+  isActive      Boolean       @default(true)
+  isArchived    Boolean       @default(false)
+  post          Post          @relation(fields: [postId], references: [id])
+  ChatMessage   ChatMessage[]
+
+  @@unique([postId, userPostId, userCommentId])
 }
 
 model ChatMessage {
@@ -188,8 +165,6 @@ model ChatMessage {
   chatId     String
   isArchived Boolean  @default(false)
   chat       Chat     @relation(fields: [chatId], references: [id])
-  // receiver   User     @relation("chatReceiver", fields: [receiverId], references: [id])
-  // sender     User     @relation("chatSender", fields: [senderId], references: [id])
 }
 
 model BenefitAssignment {

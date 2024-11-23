@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 const chatController = {
   async getChats(req: Request, res: Response) {
     try {
-      const chats = await prisma.chat.findMany();
+      const chats = await prisma.chat.findMany({
+        include: {
+          ChatMessage: true,
+        },
+      });
       res.status(200).json(chats);
     } catch (error) {
       res.status(500).json(error);
@@ -17,6 +21,29 @@ const chatController = {
       const { id } = req.params;
       const chat = await prisma.chat.findUnique({
         where: { id: id },
+        include: {
+          ChatMessage: true,
+        },
+      });
+      res.status(200).json(chat);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  async getChatByUnique(req: Request, res: Response) {
+    try {
+      const { postId, userPostId, userCommentId } = req.body;
+      const chat = await prisma.chat.findUnique({
+        where: {
+          postId_userPostId_userCommentId: {
+            postId,
+            userPostId,
+            userCommentId,
+          },
+        },
+        include: {
+          ChatMessage: true,
+        },
       });
       res.status(200).json(chat);
     } catch (error) {
