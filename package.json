@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/nataliaoliveto/tesis_recyclapp_backend#readme",
   "dependencies": {
-    "@clerk/clerk-sdk-node": "^5.0.69",
     "@prisma/client": "^5.22.0",
     "@types/cors": "^2.8.13",
     "cloudinary": "^1.33.0",
