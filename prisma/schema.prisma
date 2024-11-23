@@ -221,6 +221,7 @@ model Comment {
   postId    String
   post      Post     @relation(fields: [postId], references: [id])
   userId    String
+  username  String
   message   String   @db.VarChar(255)
   timestamp DateTime @default(now())
 }
