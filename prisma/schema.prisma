@@ -156,6 +156,7 @@ model Post {
   materialProduct   MaterialProduct  @relation(fields: [materialProductId], references: [id])
   // userPost          User             @relation(fields: [userId], references: [id])
   PostCommitment    PostCommitment[]
+  Comment           Comment[]
 }
 
 model PostCommitment {
@@ -213,6 +214,15 @@ model UserPointsHistory {
   newPointsTotal        Int
   description           String?
   createdAt             DateTime     @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  userId    String
+  message   String   @db.VarChar(255)
+  timestamp DateTime @default(now())
 }
 
 enum UserType {

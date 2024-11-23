@@ -17,6 +17,7 @@ import {
   benefitRouter,
   benefitAssignmentRouter,
   imageRouter,
+  commentRouter,
 } from "./routes";
 
 import { PrismaClient } from "@prisma/client";
@@ -41,6 +42,7 @@ app.use("/api", chatRouter);
 app.use("/api", benefitRouter);
 app.use("/api", benefitAssignmentRouter);
 app.use("/api", imageRouter);
+app.use("/api", commentRouter);
 
 app.use("*", (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
