@@ -13,3 +13,4 @@ export { default as chatRouter } from "./chat.routes";
 export { default as benefitRouter } from "./benefit.routes";
 export { default as benefitAssignmentRouter } from "./benefitAssignment.routes";
 export { default as imageRouter } from "./image.routes";
+export { default as clerkRouter } from "./clerk.routes";
