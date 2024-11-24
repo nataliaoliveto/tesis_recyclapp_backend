@@ -1,5 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
+import { generateRandomWord } from "../utils/generateRandomWord";
 
 const prisma = new PrismaClient();
 
@@ -57,6 +58,7 @@ const chatController = {
       const chat = await prisma.chat.create({
         data: {
           ...body,
+          generatedCode: generateRandomWord().toUpperCase(),
         },
       });
 

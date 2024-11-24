@@ -7,11 +7,9 @@ import {
   ratingRouter,
   subscriptionRouter,
   advertisementRouter,
-  organicRouter,
   materialProductRouter,
   materialComponentRouter,
   postRouter,
-  postCommitmentRouter,
   chatMessageRouter,
   chatRouter,
   benefitRouter,
@@ -32,11 +30,9 @@ app.use("/api", addressRouter);
 app.use("/api", ratingRouter);
 app.use("/api", subscriptionRouter);
 app.use("/api", advertisementRouter);
-app.use("/api", organicRouter);
 app.use("/api", materialProductRouter);
 app.use("/api", materialComponentRouter);
 app.use("/api", postRouter);
-app.use("/api", postCommitmentRouter);
 app.use("/api", chatMessageRouter);
 app.use("/api", chatRouter);
 app.use("/api", benefitRouter);

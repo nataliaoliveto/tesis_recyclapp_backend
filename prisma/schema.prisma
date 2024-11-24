@@ -88,13 +88,6 @@ model Benefit {
   benefitAssignments BenefitAssignment[]
 }
 
-model Organic {
-  id            String  @id @default(cuid())
-  name          String  @unique @db.Citext
-  isCompostable Boolean
-  isArchived    Boolean @default(false)
-}
-
 model MaterialProduct {
   id                String              @id @default(cuid())
   name              String              @unique @db.Citext
@@ -115,30 +108,19 @@ model MaterialComponent {
 }
 
 model Post {
-  id                String           @id @default(cuid())
-  quantity          Int              @db.SmallInt
-  description       String           @db.VarChar(255)
+  id                String          @id @default(cuid())
+  quantity          Int             @db.SmallInt
+  description       String          @db.VarChar(255)
   purpouse          PostPurpouse
-  pointsAwarded     Int              @map("pointsAwared")
+  pointsAwarded     Int             @map("pointsAwared")
   userId            String
   username          String
   materialProductId String
-  isActive          Boolean          @default(true)
-  isReserved        Boolean          @default(false)
-  isArchived        Boolean          @default(false)
+  isActive          Boolean         @default(true)
+  isArchived        Boolean         @default(false)
   Chat              Chat[]
-  materialProduct   MaterialProduct  @relation(fields: [materialProductId], references: [id])
-  PostCommitment    PostCommitment[]
+  materialProduct   MaterialProduct @relation(fields: [materialProductId], references: [id])
   Comment           Comment[]
-}
-
-model PostCommitment {
-  id         String  @id @default(cuid())
-  postId     String
-  tokenCode  String  @db.VarChar(25)
-  isActive   Boolean @default(true)
-  isArchived Boolean @default(false)
-  post       Post    @relation(fields: [postId], references: [id])
 }
 
 model Chat {
@@ -146,6 +128,7 @@ model Chat {
   postId        String
   userPostId    String
   userCommentId String
+  generatedCode String?
   startDate     DateTime      @default(now())
   endDate       DateTime?     @db.Date
   isActive      Boolean       @default(true)
