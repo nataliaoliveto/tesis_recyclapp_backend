@@ -128,7 +128,7 @@ model Chat {
   postId        String
   userPostId    String
   userCommentId String
-  generatedCode String?
+  generatedCode String
   startDate     DateTime      @default(now())
   endDate       DateTime?     @db.Date
   isActive      Boolean       @default(true)
