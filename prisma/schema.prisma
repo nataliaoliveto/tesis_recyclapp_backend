@@ -10,16 +10,17 @@ datasource db {
 }
 
 model Address {
-  id         String  @id @default(cuid())
-  street     String  @db.VarChar(50)
-  flat       String? @db.VarChar(10)
-  city       String  @db.VarChar(50)
-  state      String  @db.VarChar(50)
+  id         String       @id @default(cuid())
+  street     String       @db.VarChar(50)
+  flat       String?      @db.VarChar(10)
+  city       String       @db.VarChar(50)
+  state      String       @db.VarChar(50)
   latitude   Float?
   longitude  Float?
-  userId     String?
-  isArchived Boolean @default(false)
-  postalCode String  @db.VarChar(4)
+  userId     String
+  isArchived Boolean      @default(false)
+  postalCode String       @db.VarChar(4)
+  user       UserCustomer @relation(fields: [userId], references: [userId])
 }
 
 model UserStore {
@@ -31,6 +32,7 @@ model UserStore {
   paymentCompleted Boolean      @default(false)
   Benefit          Benefit[]
   subscription     Subscription @relation(fields: [subscriptionId], references: [id])
+  user             UserCustomer @relation(fields: [userId], references: [userId])
 }
 
 model UserCustomer {
@@ -40,15 +42,25 @@ model UserCustomer {
   userId            String              @unique
   BenefitAssignment BenefitAssignment[]
   pointsHistory     UserPointsHistory[]
+  Address           Address[]
+  UserStore         UserStore?
+  Rating            Rating?
+  Advertisement     Advertisement[]
+  Post              Post[]
+  ChatAsPostUser    Chat[]              @relation("userPost")
+  ChatAsCommentUser Chat[]              @relation("userComment")
+  ChatMessage       ChatMessage[]
+  Comment           Comment[]
 }
 
 model Rating {
-  id         String  @id @default(cuid())
-  text       String  @db.VarChar(255)
+  id         String       @id @default(cuid())
+  text       String       @db.VarChar(255)
   value      Int
-  userId     String  @unique
-  userName   String  @db.VarChar(24)
-  isArchived Boolean @default(false)
+  userId     String       @unique
+  userName   String       @db.VarChar(24)
+  isArchived Boolean      @default(false)
+  user       UserCustomer @relation(fields: [userId], references: [userId])
 }
 
 model Advertisement {
@@ -62,6 +74,7 @@ model Advertisement {
   paymentCompleted Boolean      @default(false)
   title            String       @db.VarChar(30)
   subscription     Subscription @relation(fields: [subscriptionId], references: [id])
+  user             UserCustomer @relation(fields: [userId], references: [userId])
 }
 
 model Subscription {
@@ -121,6 +134,7 @@ model Post {
   Chat              Chat[]
   materialProduct   MaterialProduct @relation(fields: [materialProductId], references: [id])
   Comment           Comment[]
+  user              UserCustomer    @relation(fields: [userId], references: [userId])
 }
 
 model Chat {
@@ -135,19 +149,22 @@ model Chat {
   isArchived    Boolean       @default(false)
   post          Post          @relation(fields: [postId], references: [id])
   ChatMessage   ChatMessage[]
+  userPost      UserCustomer  @relation(fields: [userPostId], references: [userId], name: "userPost")
+  userComment   UserCustomer  @relation(fields: [userCommentId], references: [userId], name: "userComment")
 
   @@unique([postId, userPostId, userCommentId])
 }
 
 model ChatMessage {
-  id             String   @id @default(cuid())
-  timestamp      DateTime @default(now())
-  message        String   @db.VarChar(255)
+  id             String       @id @default(cuid())
+  timestamp      DateTime     @default(now())
+  message        String       @db.VarChar(255)
   senderId       String
   senderUsername String
   chatId         String
-  isArchived     Boolean  @default(false)
-  chat           Chat     @relation(fields: [chatId], references: [id])
+  isArchived     Boolean      @default(false)
+  chat           Chat         @relation(fields: [chatId], references: [id])
+  user           UserCustomer @relation(fields: [senderId], references: [userId])
 }
 
 model BenefitAssignment {
@@ -157,13 +174,12 @@ model BenefitAssignment {
   generatedCode  String
   isActive       Boolean      @default(true)
   benefit        Benefit      @relation(fields: [benefitId], references: [id])
-  userCustomer   UserCustomer @relation(fields: [userCustomerId], references: [id])
+  user           UserCustomer @relation(fields: [userCustomerId], references: [userId])
 }
 
 model UserPointsHistory {
   id                    Int          @id @default(autoincrement())
   userCustomerId        String
-  userCustomer          UserCustomer @relation(fields: [userCustomerId], references: [id])
   userId                String
   pointsChange          Int
   previousPointsCurrent Int
@@ -172,16 +188,18 @@ model UserPointsHistory {
   newPointsTotal        Int
   description           String?
   createdAt             DateTime     @default(now())
+  userCustomer          UserCustomer @relation(fields: [userCustomerId], references: [id])
 }
 
 model Comment {
-  id        String   @id @default(cuid())
+  id        String       @id @default(cuid())
   postId    String
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post         @relation(fields: [postId], references: [id])
   userId    String
   username  String
-  message   String   @db.VarChar(255)
-  timestamp DateTime @default(now())
+  message   String       @db.VarChar(255)
+  timestamp DateTime     @default(now())
+  user      UserCustomer @relation(fields: [userId], references: [userId])
 }
 
 enum UserType {
