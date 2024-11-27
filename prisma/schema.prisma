@@ -10,16 +10,17 @@ datasource db {
 }
 
 model Address {
-  id         String  @id @default(cuid())
-  street     String  @db.VarChar(50)
-  flat       String? @db.VarChar(10)
-  city       String  @db.VarChar(50)
-  state      String  @db.VarChar(50)
-  latitude   Float?
-  longitude  Float?
-  userId     String?
-  isArchived Boolean @default(false)
-  postalCode String  @db.VarChar(4)
+  id          String  @id @default(cuid())
+  street      String  @db.VarChar(50)
+  flat        String? @db.VarChar(10)
+  city        String  @db.VarChar(50)
+  state       String  @db.VarChar(50)
+  latitude    Float?
+  longitude   Float?
+  userId      String?
+  isArchived  Boolean @default(false)
+  postalCode  String  @db.VarChar(4)
+  displayName String?
 }
 
 model UserStore {
@@ -58,7 +59,7 @@ model Advertisement {
   text             String       @db.VarChar(255)
   userId           String
   subscriptionId   String
-  displayName      String?
+  displayName      String
   isArchived       Boolean      @default(false)
   paymentCompleted Boolean      @default(false)
   title            String       @db.VarChar(30)
@@ -83,7 +84,7 @@ model Benefit {
   quantity           Int
   pointsCost         Int
   userStoreId        String
-  displayName        String?
+  displayName        String
   isActive           Boolean             @default(true)
   isArchived         Boolean             @default(false)
   userStore          UserStore           @relation(fields: [userStoreId], references: [id])
