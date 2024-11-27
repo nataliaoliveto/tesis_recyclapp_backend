@@ -18,9 +18,6 @@ import {
   commentRouter,
 } from "./routes";
 
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
 const app = express();
 
 app.use(express.json());
@@ -51,29 +48,8 @@ app.use("*", (req, res) => {
   });
 });
 
-async function mainDisplay() {
-  console.log("mainDisplay");
-  // const arrayFindManyUsers = await prisma.user.findMany({});
-  // console.log(
-  //   "arrayFindManyUsers",
-  //   JSON.stringify(arrayFindManyUsers, null, 1)
-  // );
-}
-
-async function main() {
-  await mainDisplay();
-}
-
-main();
-
 app.get("/", async (req: any, res: any) => {
   return res.json({ message: "Hello World" });
 });
 
 const server = app.listen(5000, () => console.log("server ready at 5000"));
-
-// TODO: error handler
-// code: 'P2025',
-// clientVersion: '4.10.1',
-// meta: { cause: 'Record to delete does not exist.' },
-// batchRequestIdx: undefined

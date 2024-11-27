@@ -46,7 +46,6 @@ const benefitAssignmentController = {
     }
   },
   async getBenefitAssignmentsByStoreBenefits(req: Request, res: Response) {
-    console.log("req body", req.body);
     const { benefitIds } = req.body;
     if (!Array.isArray(benefitIds) || benefitIds.length === 0) {
       return res.status(400).json({ error: "No hay beneficios asociados." });
@@ -62,7 +61,6 @@ const benefitAssignmentController = {
         },
       });
 
-      console.log("benefitAssignments", benefitAssignments);
       res.status(200).json(benefitAssignments);
     } catch (error) {
       res.status(500).json(error);
@@ -79,7 +77,6 @@ const benefitAssignmentController = {
       });
       res.status(200).json(benefitAssignment);
     } catch (error) {
-      console.log(error);
       res.status(500).json(error);
     }
   },
@@ -97,7 +94,6 @@ const benefitAssignmentController = {
       });
       res.status(200).json(benefitAssignment);
     } catch (error) {
-      console.log(error);
       res.status(500).json(error);
     }
   },

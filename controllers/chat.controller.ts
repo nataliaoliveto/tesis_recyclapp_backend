@@ -32,7 +32,6 @@ const chatController = {
     }
   },
   async getChatByUnique(req: Request, res: Response) {
-    console.log(req.body);
     try {
       const { postId, userPostId, userCommentId } = req.body;
       const chat = await prisma.chat.findUnique({

@@ -49,15 +49,12 @@ const advertisementController = {
         },
       });
 
-      console.log("advertisement", advertisement);
-
       res.status(201).json({ advertisementId: advertisement.id });
     } catch (error) {
       res.status(500).json(error);
     }
   },
   async updateAdvertisement(req: Request, res: Response) {
-    //TODO: check if it is required to be available
     try {
       const { body } = req;
       const advertisementBody: Prisma.AdvertisementUpdateArgs = {
@@ -84,7 +81,6 @@ const advertisementController = {
     }
   },
   async upsertAdvertisement(req: Request, res: Response) {
-    //TODO: check if it is required to be available
     try {
       const { body } = req;
       const advertisementBody: Prisma.AdvertisementUpsertArgs = {
