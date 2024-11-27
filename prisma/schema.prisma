@@ -58,6 +58,7 @@ model Advertisement {
   text             String       @db.VarChar(255)
   userId           String
   subscriptionId   String
+  displayName      String?
   isArchived       Boolean      @default(false)
   paymentCompleted Boolean      @default(false)
   title            String       @db.VarChar(30)
@@ -82,6 +83,7 @@ model Benefit {
   quantity           Int
   pointsCost         Int
   userStoreId        String
+  displayName        String?
   isActive           Boolean             @default(true)
   isArchived         Boolean             @default(false)
   userStore          UserStore           @relation(fields: [userStoreId], references: [id])
