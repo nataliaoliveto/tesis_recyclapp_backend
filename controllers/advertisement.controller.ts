@@ -41,6 +41,7 @@ const advertisementController = {
         text: body.text,
         title: body.title,
         userId: body.userId,
+        displayName: body.displayName,
       };
       const advertisement = await prisma.advertisement.create({
         data: {
@@ -109,6 +110,7 @@ const advertisementController = {
           text: body.text,
           title: body.title,
           userId: body.userId,
+          displayName: body.displayName,
         },
       };
       const advertisement = await prisma.advertisement.upsert(
