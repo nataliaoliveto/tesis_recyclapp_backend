@@ -122,8 +122,8 @@ model Post {
   isActive          Boolean         @default(true)
   isArchived        Boolean         @default(false)
   Chat              Chat[]
-  materialProduct   MaterialProduct @relation(fields: [materialProductId], references: [id])
   Comment           Comment[]
+  materialProduct   MaterialProduct @relation(fields: [materialProductId], references: [id])
 }
 
 model Chat {
@@ -166,7 +166,6 @@ model BenefitAssignment {
 model UserPointsHistory {
   id                    Int          @id @default(autoincrement())
   userCustomerId        String
-  userCustomer          UserCustomer @relation(fields: [userCustomerId], references: [id])
   userId                String
   pointsChange          Int
   previousPointsCurrent Int
@@ -175,16 +174,17 @@ model UserPointsHistory {
   newPointsTotal        Int
   description           String?
   createdAt             DateTime     @default(now())
+  userCustomer          UserCustomer @relation(fields: [userCustomerId], references: [id])
 }
 
 model Comment {
   id        String   @id @default(cuid())
   postId    String
-  post      Post     @relation(fields: [postId], references: [id])
   userId    String
   username  String
   message   String   @db.VarChar(255)
   timestamp DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id])
 }
 
 enum UserType {
