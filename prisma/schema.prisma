@@ -164,8 +164,7 @@ model BenefitAssignment {
 }
 
 model UserPointsHistory {
-  id                    String       @id @default(cuid())
-  userCustomerId        String
+  id                    String        @id @default(cuid())
   userId                String
   pointsChange          Int
   previousPointsCurrent Int
@@ -173,8 +172,9 @@ model UserPointsHistory {
   previousPointsTotal   Int
   newPointsTotal        Int
   description           String?
-  createdAt             DateTime     @default(now())
-  userCustomer          UserCustomer @relation(fields: [userCustomerId], references: [id])
+  createdAt             DateTime      @default(now())
+  UserCustomer          UserCustomer? @relation(fields: [userCustomerId], references: [id])
+  userCustomerId        String?
 }
 
 model Comment {
