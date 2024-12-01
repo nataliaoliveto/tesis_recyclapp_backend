@@ -164,7 +164,7 @@ model BenefitAssignment {
 }
 
 model UserPointsHistory {
-  id                    Int          @id @default(autoincrement())
+  id                    String       @id @default(cuid())
   userCustomerId        String
   userId                String
   pointsChange          Int

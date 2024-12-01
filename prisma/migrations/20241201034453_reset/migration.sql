@@ -183,7 +183,7 @@ CREATE TABLE "BenefitAssignment" (
 
 -- CreateTable
 CREATE TABLE "UserPointsHistory" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "userCustomerId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "pointsChange" INTEGER NOT NULL,
