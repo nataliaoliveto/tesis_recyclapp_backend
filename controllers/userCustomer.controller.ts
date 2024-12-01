@@ -73,7 +73,7 @@ const userCustomerController = {
     }
   },
   async updateUserCustomer(req: Request, res: Response) {
-    const { body } = req;
+    const { pointsCurrent, pointsTotal } = req.body;
     const { id } = req.params;
 
     try {
@@ -82,7 +82,8 @@ const userCustomerController = {
           id: id,
         },
         data: {
-          ...body,
+          pointsCurrent: pointsCurrent,
+          pointsTotal: pointsTotal,
         },
       });
       res.status(200).json(userCustomer);
